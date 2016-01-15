@@ -35,7 +35,13 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/PCB.o \
+	${OBJECTDIR}/PriorityQueue.o \
+	${OBJECTDIR}/PriorityQueue_test.o \
+	${OBJECTDIR}/fifo_queue.o \
+	${OBJECTDIR}/fifo_queue_test.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/pcb_test.o
 
 
 # C Compiler Flags
@@ -62,10 +68,40 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/PCB.o: PCB.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PCB.o PCB.c
+
+${OBJECTDIR}/PriorityQueue.o: PriorityQueue.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PriorityQueue.o PriorityQueue.c
+
+${OBJECTDIR}/PriorityQueue_test.o: PriorityQueue_test.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PriorityQueue_test.o PriorityQueue_test.c
+
+${OBJECTDIR}/fifo_queue.o: fifo_queue.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/fifo_queue.o fifo_queue.c
+
+${OBJECTDIR}/fifo_queue_test.o: fifo_queue_test.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/fifo_queue_test.o fifo_queue_test.c
+
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/pcb_test.o: pcb_test.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcb_test.o pcb_test.c
 
 # Subprojects
 .build-subprojects:

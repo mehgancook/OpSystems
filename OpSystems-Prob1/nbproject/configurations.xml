@@ -4,6 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>PCB.h</itemPath>
+      <itemPath>PriorityQueue.h</itemPath>
+      <itemPath>PriorityQueue_test.h</itemPath>
+      <itemPath>fifo_queue.h</itemPath>
+      <itemPath>fifo_queue_test.h</itemPath>
+      <itemPath>pcb_test.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,7 +18,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>PCB.c</itemPath>
+      <itemPath>PriorityQueue.c</itemPath>
+      <itemPath>PriorityQueue_test.c</itemPath>
+      <itemPath>fifo_queue.c</itemPath>
+      <itemPath>fifo_queue_test.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>pcb_test.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -36,7 +48,31 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="PCB.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PCB.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PriorityQueue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PriorityQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PriorityQueue_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PriorityQueue_test.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="fifo_queue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="fifo_queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="fifo_queue_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="fifo_queue_test.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pcb_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pcb_test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -59,7 +95,31 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="PCB.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PCB.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PriorityQueue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PriorityQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PriorityQueue_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PriorityQueue_test.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="fifo_queue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="fifo_queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="fifo_queue_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="fifo_queue_test.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pcb_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pcb_test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

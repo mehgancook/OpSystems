@@ -101,6 +101,7 @@ void testPriorityQueue() {
     while (i < va) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
 //    PriorityQueuetoString(thePQ);
@@ -179,6 +180,7 @@ void testPriorityQueue() {
     while (i < va1) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
 //    PriorityQueuetoString(thePQ);
@@ -253,6 +255,7 @@ void testPriorityQueue() {
     while (i < va2) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
  //   PriorityQueuetoString(thePQ);
@@ -331,6 +334,7 @@ void testPriorityQueue() {
     while (i < va3) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
  //   PriorityQueuetoString(thePQ);
@@ -407,6 +411,7 @@ void testPriorityQueue() {
     while (i < va5) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
 //    PriorityQueuetoString(thePQ);
@@ -485,6 +490,7 @@ void testPriorityQueue() {
     while (i < va6) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
  //   PriorityQueuetoString(thePQ);
@@ -559,6 +565,7 @@ void testPriorityQueue() {
     while (i < va7) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
  //   PriorityQueuetoString(thePQ);
@@ -637,6 +644,7 @@ void testPriorityQueue() {
     while (i < va8) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
 //    PriorityQueuetoString(thePQ);
@@ -710,6 +718,7 @@ void testPriorityQueue() {
     while (i < va9) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
 //    PriorityQueuetoString(thePQ);
@@ -788,6 +797,7 @@ void testPriorityQueue() {
     while (i < va81) {
       
     PCB_p a = GetNext(thePQ);
+    toString(a);
     i++;
     }
     PriorityQueuetoString(thePQ);

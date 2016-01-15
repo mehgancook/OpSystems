@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
  //   testPCB();
  //   testFIFO();
      testPriorityQueue();
+ //   printf("HIII");
 //    int i = 0;
 //    while(i < 20) {
  //   int random = rand();
