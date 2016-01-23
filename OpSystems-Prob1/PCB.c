@@ -23,6 +23,26 @@ const char* getStateName(enum state_type state)
    }
 }
 
+char* getState(PCB_p pcb_p) {
+    return getStateName(pcb_p->state);
+}
+
+int getPid(PCB_p pcb_p) {
+    return pcb_p->pid; 
+}
+
+address getAddress(PCB_p pcb_p) {
+    return pcb_p->address_space;
+} 
+
+address getPC(PCB_p pcb_p) {
+    return pcb_p->PC;
+}
+
+int getPriority(PCB_p pcb_p) {
+    return pcb_p->Priority;
+}
+
 /**
  * Takes a PCB pointer and prints out the contents of the PCB
  * @param PCB_p pointer referencing the PCB to print
@@ -46,14 +66,14 @@ void toString(PCB_p pcb_p) {
         printf("\t\tNONE\n\n");
     }
 
-    // if there exists a following pcb, print out the next address
-    if (pcb_p->next_pcb) {
-        PCB_p next = pcb_p->next_pcb;
-        printf("Next Struct Address: %d  ", next->address_space);
-    } else {
-    // otherwise print nothing
-        printf("Next Struct Address: NULL  ");
-    }
+    // // if there exists a following pcb, print out the next address
+    // if (pcb_p->next_pcb) {
+    //     PCB_p next = pcb_p->next_pcb;
+    //     printf("Next Struct Address: %d  ", next->address_space);
+    // } else {
+    // // otherwise print nothing
+    //     printf("Next Struct Address: NULL  ");
+    // }
 
     printf("Priority: %d  ", pcb_p->Priority);
     printf("Address Space: %d\n\n  ", pcb_p->address_space);

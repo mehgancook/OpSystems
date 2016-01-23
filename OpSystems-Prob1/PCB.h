@@ -29,7 +29,7 @@ typedef struct pcb {
     enum state_type state; /* current state  of the pcb */
     int pid; /** id of the pid */
     address PC; /* where to resume */
-    struct PCB *next_pcb; /* list ptr */
+//    struct PCB *next_pcb; /* list ptr */
     int Priority; /* extrinsic property */
     address address_space; /* where in memory */
     int reg_file[NUMREGS]; /* contents of GPRs */
@@ -43,6 +43,16 @@ typedef PCB *PCB_p;
  * @param PCB_p pointer referencing the PCB to print
  */
 void toString(PCB_p pcb);
+
+char* getState(PCB_p pcb_p);
+
+int getPid(PCB_p pcb_p);
+
+address getAddress(PCB_p pcb_p);
+
+address getPC(PCB_p pcb_p);
+
+int getPriority(PCB_p pcb_p);
 
 #ifdef __cplusplus
 }
