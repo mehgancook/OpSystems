@@ -12,10 +12,16 @@
 #ifndef FIFO_QUEUE_H_
 #define FIFO_QUEUE_H_
 
+typedef struct NODE {
+	void *next;
+	void *data;
+} Node;
+
 typedef struct fifo_queue {
 	int size;
-	PCB_p front;
-	PCB_p back;
+	Node front;
+	Node back;
+	void *data;
 } fifo_queue, FIFO_QUEUE, QUEUE, Q;
 
 fifo_queue *create_queue();

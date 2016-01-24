@@ -8,11 +8,12 @@
 #include "fifo_queue.h"
 
 // Global Variables
-//static PCB_p queue->front;
-//static PCB_p queue->back;
+//static Node queue->front;
+//static Node queue->back;
 //static int size = 0;
 //static struct fifo_queue *queue = NULL;
 
+// Initializes a new FIFOQueue
 fifo_queue * create_queue() {
 	fifo_queue *queue;
 	queue = malloc(sizeof(queue));
@@ -23,7 +24,7 @@ fifo_queue * create_queue() {
 }
 
 // Add PCB block to this queue with the same priority as the others in this queue
-void enqueue(fifo_queue *queue, PCB_p block) {
+void enqueue(fifo_queue *queue, Node block) {
 	// If the queue is empty
 //	printf("%d", queue->size);
 	if (!queue->size) {
@@ -39,8 +40,8 @@ void enqueue(fifo_queue *queue, PCB_p block) {
 }
 
 // Remove and return the first PCB block in this queue.
-PCB_p dequeue(fifo_queue *queue) {
-	PCB_p temp = queue->front;
+Node dequeue(fifo_queue *queue) {
+	Node temp = queue->front;
 	if (!temp) {	// If this queue is empty
 		printf("\nError, there are no more PCB's in this queue!");
 	} else {
@@ -51,7 +52,7 @@ PCB_p dequeue(fifo_queue *queue) {
 }
 
 // Return a pointer referencing the first PCB block of this queue
-PCB_p peek(fifo_queue *queue) {
+Node peek(fifo_queue *queue) {
 	if (!queue->front) {	// Check if queue is empty
 		printf("\nError, there are no more PCB's in this queue!");
 	}
@@ -68,13 +69,15 @@ int is_empty(fifo_queue *queue) {
 	return result;
 }
 
+// Returns the size of the passed queue
 int get_size(fifo_queue *queue) {
 	return queue->size;
 }
 
+// Prints the contents of the passed queue.
 void to_string_enqueue(fifo_queue *queue) {
 	int i = 1;
-	PCB_p current = queue->front;
+	Node current = queue->front;
 	if (!is_empty(queue)) {	// If queue is not empty
 		if (queue->front == queue->back) {	// Only one element
 			printf("P%d->", current->pid);
@@ -92,9 +95,11 @@ void to_string_enqueue(fifo_queue *queue) {
 	}
 }
 
-void to_string_dequeue(fifo_queue *queue, PCB_p p) {
+// Prints the contents of the passed queue. p is the most 
+// recently dequeued Node.
+void to_string_dequeue(fifo_queue *queue, Node p) {
 	int i = 1, j = 2;
-	PCB_p current = queue->front;
+	Node current = queue->front;
 	if (!is_empty(queue) || p) {	// If queue is not empty
 		if (queue->front == queue->back) {	// Only one element
 			printf("P%d->P%d->*\n", p->pid, queue->front->pid);
