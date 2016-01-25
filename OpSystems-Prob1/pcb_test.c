@@ -26,7 +26,7 @@ void testPCB() {
     pcb1.PC = 35;
     pcb1.state = running;
     pcb1.pid = 8;
-    pcb1.next_pcb = two;
+   // pcb1.next_pcb = two;
     int i = 0;
     while (i < 16){
         pcb1.reg_file[i] = i;

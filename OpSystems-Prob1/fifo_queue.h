@@ -12,25 +12,43 @@
 #ifndef FIFO_QUEUE_H_
 #define FIFO_QUEUE_H_
 
-typedef struct NODE {
-	void *next;
-	void *data;
-} Node;
+//typedef struct NODE {
+//	void *next;
+//	void *data;
+//} Node;
+//
+//typedef struct fifo_queue {
+//	int size;
+//	Node front;
+//	Node back;
+//	void *data;
+//} fifo_queue, FIFO_QUEUE, QUEUE, Q;
+
+
+struct node {
+	PCB_p pcb;
+	struct node *next;
+        struct node *back;
+};
+
+typedef struct node Node;
 
 typedef struct fifo_queue {
-	int size;
-	Node front;
-	Node back;
-	void *data;
-} fifo_queue, FIFO_QUEUE, QUEUE, Q;
+	Node *head;
+        int size;
+} fifo_queue;
 
-fifo_queue *create_queue();
-void enqueue(fifo_queue *queue, PCB_p block);
-PCB_p dequeue(fifo_queue *queue);
-PCB_p peek(fifo_queue *queue);
-int is_empty(fifo_queue *queue); // Return 1 if empty
-int get_size(fifo_queue *queue);
-void to_string_enqueue(fifo_queue *queue);
-void to_string_dequeue(fifo_queue *queue, PCB_p p);
+// Defines the fifo_queue_p which is a pointer to a fifo_queue
+typedef fifo_queue *fifo_queue_p;
+
+
+
+fifo_queue_p create_queue();
+void enqueue(fifo_queue_p queue, PCB_p block);
+PCB_p dequeue(fifo_queue_p queue);
+PCB_p peek(fifo_queue_p queue);
+int isEmpty(fifo_queue_p queue);
+void to_string_enqueue(fifo_queue_p queue);
+void to_string_dequeue(fifo_queue_p queue, PCB_p p);
 
 #endif /* fifo_queue.h */

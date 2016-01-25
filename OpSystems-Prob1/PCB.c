@@ -48,6 +48,7 @@ int getPriority(PCB_p pcb_p) {
  * @param PCB_p pointer referencing the PCB to print
  */
 void toString(PCB_p pcb_p) {
+    
     printf("contents: ");
 
     printf("State: %s  ", getStateName(pcb_p->state));
