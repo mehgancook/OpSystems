@@ -15,11 +15,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "PCB.h"
-//#include "fifo_queue.h"
+#include "fifo_queue.h"
 //#include "pcb_test.h"
 #include "fifo_queue_test.h"
 //#include "PriorityQueue_test.h"
 
+void testFIFO() {
+    fifo_queue_p q = create_queue();
+    int j = 0;
+    int i = 0;
+    while (i < 5) {
+        PCB_p pcb = create_pcb(i, j);
+        enqueue(q, pcb);
+        i++; j++;
+          to_string_enqueue(q);
+    }
+}
 /*
  * 
  */

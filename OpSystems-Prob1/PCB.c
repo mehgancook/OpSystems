@@ -1,10 +1,30 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * PCB.c
+ *
+ *  Created on: Jan 7, 2016
+ *    Author: Jonah Howard
+ *                      Mehgan Cook
+ *                      Anthony Zullo
+ *                      Quinn Cox
+ *                      
  */
 #include <stdio.h> 
 #include "PCB.h"
+
+
+/**
+ * creates the pcb
+ */
+PCB_p create_pcb(int thePid, int thePriority) {
+    PCB_p pcb_p = malloc(sizeof(PCB));
+    pcb_p->state = new; /* current state  of the pcb */
+    pcb_p->pid = thePid; /** id of the pid */
+    pcb_p->PC = 0; /* where to resume */
+//    struct PCB *next_pcb; /* list ptr */
+    pcb_p->Priority = thePriority; /* extrinsic property */
+    pcb_p->address_space = 0; /* where in memory */
+    return pcb_p;
+}
 
 /**
  * Gets the state name and returns the state name in a String.
@@ -77,5 +97,5 @@ void toString(PCB_p pcb_p) {
     // }
 
     printf("Priority: %d  ", pcb_p->Priority);
-    printf("Address Space: %d\n\n  ", pcb_p->address_space);
+    printf("Address Space: %u\n\n  ", pcb_p->address_space);
 }

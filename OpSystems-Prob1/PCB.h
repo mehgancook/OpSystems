@@ -1,16 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   PCB.h
- * Author: Cox Family
+ * PCB.h
  *
- * Created on January 8, 2016, 1:56 PM
+ *  Created on: Jan 7, 2016
+ *    Author: Jonah Howard
+ *                      Mehgan Cook
+ *                      Anthony Zullo
+ *                      Quinn Cox
+ *                      
  */
-
 #ifndef PCB_H
 #define PCB_H
 
@@ -22,7 +19,7 @@ extern "C" {
 
 enum state_type {new, ready, running, waiting, interrupted, halted};
 
-typedef int address;
+typedef unsigned int address;
 
 // Defines the PCB struct type
 typedef struct pcb {
@@ -38,6 +35,8 @@ typedef struct pcb {
 // Defines the PCB_p which is a pointer to a PCB
 typedef PCB *PCB_p;
 
+
+PCB_p create_pcb(int thePid, int thePriority);
 /**
  * Takes a PCB pointer and prints out the contents of the PCB
  * @param PCB_p pointer referencing the PCB to print
