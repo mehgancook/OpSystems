@@ -104,23 +104,24 @@ void toString(PCB_p pcb_p) {
  */
 void print_to_file(FILE *outfile, fifo_queue_p queue) {
     struct Node current = queue->head;
-    while (Node) {
+    while (current) {
         fwrite("contents: ", 1, 1, outfile);
-        fprintf(outfile, "State: %s  ", getStateName(Node->pcb->state));
-        fprintf(outfile, "PID: %d  ", Node->pcb->pid);
-        fprintf(outfile, "PC: %d  ", Node->pcb->PC);
+        fprintf(outfile, "State: %s  ", getStateName(current->pcb->state));
+        fprintf(outfile, "PID: %d  ", current->pcb->pid);
+        fprintf(outfile, "PC: %d  ", current->pcb->PC);
             // prints the register files associated with this PCB
         fwrite("Reg Files:  ", 1, 1, outfile);
-        if (Node->pcb->reg_file) {
+        if (current->pcb->reg_file) {
             int i;
             for (i = 0; i < NUMREGS; i++) {
-                fprintf(outfile, "REG%d: %d  ", i, Node->pcb->reg_file[i]);
+                fprintf(outfile, "REG%d: %d  ", i, current->pcb->reg_file[i]);
             }
             fwrite("  ", 1, 1, outfile);
         } else {
             fwrite("\t\tNONE\n\n"1, 1, outfile);
         }
-        fprintf(outfile, "Priority: %d  ", Node->pcb->Priority);
-        fprintf(outfile, "Address Space: %u\n\n  ", Node->pcb->address_space);
+        fprintf(outfile, "Priority: %d  ", current->pcb->Priority);
+        fprintf(outfile, "Address Space: %u\n\n  ", current->pcb->address_space);
+        current = current->next;
     }
 }
