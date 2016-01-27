@@ -15,7 +15,7 @@ void testFIFO() {
     int j = 0;
     int i = 0;
     while (i < 5) {
-        PCB_p pcb = create_pcb(i, 0);
+        PCB_p pcb = create_pcb(i, j);
         enqueue(q, pcb);
         i++; j++;
           to_string_enqueue(q);
