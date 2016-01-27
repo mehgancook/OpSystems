@@ -41,7 +41,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/fifo_queue.o \
 	${OBJECTDIR}/fifo_queue_test.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/pcb_test.o
+	${OBJECTDIR}/pcb_test.o \
+	${OBJECTDIR}/print.o
 
 
 # C Compiler Flags
@@ -102,6 +103,11 @@ ${OBJECTDIR}/pcb_test.o: pcb_test.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcb_test.o pcb_test.c
+
+${OBJECTDIR}/print.o: print.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/print.o print.c
 
 # Subprojects
 .build-subprojects:

@@ -99,3 +99,28 @@ void toString(PCB_p pcb_p) {
     printf("Priority: %d  ", pcb_p->Priority);
     printf("Address Space: %u\n\n  ", pcb_p->address_space);
 }
+/*
+ * Prints contents of the passed queue to the passed file.  
+ */
+void print_to_file(FILE *outfile, fifo_queue_p queue) {
+    struct Node current = queue->head;
+    while (Node) {
+        fwrite("contents: ", 1, 1, outfile);
+        fprintf(outfile, "State: %s  ", getStateName(Node->pcb->state));
+        fprintf(outfile, "PID: %d  ", Node->pcb->pid);
+        fprintf(outfile, "PC: %d  ", Node->pcb->PC);
+            // prints the register files associated with this PCB
+        fwrite("Reg Files:  ", 1, 1, outfile);
+        if (Node->pcb->reg_file) {
+            int i;
+            for (i = 0; i < NUMREGS; i++) {
+                fprintf(outfile, "REG%d: %d  ", i, Node->pcb->reg_file[i]);
+            }
+            fwrite("  ", 1, 1, outfile);
+        } else {
+            fwrite("\t\tNONE\n\n"1, 1, outfile);
+        }
+        fprintf(outfile, "Priority: %d  ", Node->pcb->Priority);
+        fprintf(outfile, "Address Space: %u\n\n  ", Node->pcb->address_space);
+    }
+}
