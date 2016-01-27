@@ -118,7 +118,7 @@ void print_to_file(FILE *outfile, fifo_queue_p queue) {
             }
             fwrite("  ", 1, 1, outfile);
         } else {
-            fwrite("\t\tNONE\n\n"1, 1, outfile);
+            fwrite("\t\tNONE\n\n", 1, 1, outfile);
         }
         fprintf(outfile, "Priority: %d  ", current->pcb->Priority);
         fprintf(outfile, "Address Space: %u\n\n  ", current->pcb->address_space);
