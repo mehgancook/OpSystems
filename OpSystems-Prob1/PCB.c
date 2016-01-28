@@ -73,7 +73,7 @@ void toString(PCB_p pcb_p) {
 
     printf("State: %s  ", getStateName(pcb_p->state));
     printf("PID: %d  ", pcb_p->pid);
-    printf("PC: %d  ", pcb_p->PC);
+//    printf("PC: %d  ", pcb_p->PC);
 
     // prints the register files associated with this PCB
     printf("Reg Files:  ");
@@ -102,26 +102,26 @@ void toString(PCB_p pcb_p) {
 /*
  * Prints contents of the passed queue to the passed file.  
  */
-void print_to_file(FILE *outfile, fifo_queue_p queue) {
-    struct Node current = queue->head;
-    while (current) {
-        fwrite("contents: ", 1, 1, outfile);
-        fprintf(outfile, "State: %s  ", getStateName(current->pcb->state));
-        fprintf(outfile, "PID: %d  ", current->pcb->pid);
-        fprintf(outfile, "PC: %d  ", current->pcb->PC);
-            // prints the register files associated with this PCB
-        fwrite("Reg Files:  ", 1, 1, outfile);
-        if (current->pcb->reg_file) {
-            int i;
-            for (i = 0; i < NUMREGS; i++) {
-                fprintf(outfile, "REG%d: %d  ", i, current->pcb->reg_file[i]);
-            }
-            fwrite("  ", 1, 1, outfile);
-        } else {
-            fwrite("\t\tNONE\n\n", 1, 1, outfile);
-        }
-        fprintf(outfile, "Priority: %d  ", current->pcb->Priority);
-        fprintf(outfile, "Address Space: %u\n\n  ", current->pcb->address_space);
-        current = current->next;
-    }
-}
+//void print_to_file(FILE *outfile, fifo_queue_p queue) {
+//    struct Node current = queue->head;
+//    while (current) {
+//        fwrite("contents: ", 1, 1, outfile);
+//        fprintf(outfile, "State: %s  ", getStateName(current->pcb->state));
+//        fprintf(outfile, "PID: %d  ", current->pcb->pid);
+////        fprintf(outfile, "PC: %d  ", current->pcb->PC);
+//            // prints the register files associated with this PCB
+//        fwrite("Reg Files:  ", 1, 1, outfile);
+//        if (current->pcb->reg_file) {
+//            int i;
+//            for (i = 0; i < NUMREGS; i++) {
+//                fprintf(outfile, "REG%d: %d  ", i, current->pcb->reg_file[i]);
+//            }
+//            fwrite("  ", 1, 1, outfile);
+//        } else {
+//            fwrite("\t\tNONE\n\n", 1, 1, outfile);
+//        }
+//        fprintf(outfile, "Priority: %d  ", current->pcb->Priority);
+//        fprintf(outfile, "Address Space: %u\n\n  ", current->pcb->address_space);
+//        current = current->next;
+//    }
+//}

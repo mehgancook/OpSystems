@@ -1,8 +1,5 @@
-build/Debug/Cygwin-Windows/main.o: main.c PCB.h fifo_queue.h \
- fifo_queue_test.h
+build/Debug/Cygwin-Windows/main.o: main.c PCB.h fifo_queue.h
 
 PCB.h:
 
 fifo_queue.h:
-
-fifo_queue_test.h:

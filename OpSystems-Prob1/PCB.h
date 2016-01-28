@@ -43,7 +43,7 @@ PCB_p create_pcb(int thePid, int thePriority);
  */
 void toString(PCB_p pcb);
 
-void print_to_file(FILE *outfile, fifo_queue_p queue);
+//void print_to_file(FILE *outfile, fifo_queue_p queue);
 
 char* getState(PCB_p pcb_p);
 
