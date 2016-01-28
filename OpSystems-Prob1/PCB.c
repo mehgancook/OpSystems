@@ -10,6 +10,7 @@
  */
 #include <stdio.h> 
 #include "PCB.h"
+#include <string.h>
 
 
 /**
@@ -63,65 +64,29 @@ int getPriority(PCB_p pcb_p) {
     return pcb_p->Priority;
 }
 
+
+
 /**
  * Takes a PCB pointer and prints out the contents of the PCB
  * @param PCB_p pointer referencing the PCB to print
  */
-void toString(PCB_p pcb_p) {
-    
+void toString(PCB_p pcb_p) {   
     printf("contents: ");
-
     printf("State: %s  ", getStateName(pcb_p->state));
     printf("PID: %d  ", pcb_p->pid);
-//    printf("PC: %d  ", pcb_p->PC);
-
-    // prints the register files associated with this PCB
-    printf("Reg Files:  ");
-    if (pcb_p->reg_file) {
-        int i;
-        for (i = 0; i < NUMREGS; i++) {
-            printf("REG%d: %d  ", i, pcb_p->reg_file[i]);
-        }
-        printf("  ");
-    } else {
-        printf("\t\tNONE\n\n");
-    }
-
-    // // if there exists a following pcb, print out the next address
-    // if (pcb_p->next_pcb) {
-    //     PCB_p next = pcb_p->next_pcb;
-    //     printf("Next Struct Address: %d  ", next->address_space);
-    // } else {
-    // // otherwise print nothing
-    //     printf("Next Struct Address: NULL  ");
-    // }
-
+    printf("PC: %d  ", pcb_p->PC);
     printf("Priority: %d  ", pcb_p->Priority);
-    printf("Address Space: %u\n\n  ", pcb_p->address_space);
+    printf("Address Space: %u\n\n", pcb_p->address_space);
 }
 /*
- * Prints contents of the passed queue to the passed file.  
+ * Prints contents of the passed PCB to the passed file.  
  */
-//void print_to_file(FILE *outfile, fifo_queue_p queue) {
-//    struct Node current = queue->head;
-//    while (current) {
-//        fwrite("contents: ", 1, 1, outfile);
-//        fprintf(outfile, "State: %s  ", getStateName(current->pcb->state));
-//        fprintf(outfile, "PID: %d  ", current->pcb->pid);
-////        fprintf(outfile, "PC: %d  ", current->pcb->PC);
-//            // prints the register files associated with this PCB
-//        fwrite("Reg Files:  ", 1, 1, outfile);
-//        if (current->pcb->reg_file) {
-//            int i;
-//            for (i = 0; i < NUMREGS; i++) {
-//                fprintf(outfile, "REG%d: %d  ", i, current->pcb->reg_file[i]);
-//            }
-//            fwrite("  ", 1, 1, outfile);
-//        } else {
-//            fwrite("\t\tNONE\n\n", 1, 1, outfile);
-//        }
-//        fprintf(outfile, "Priority: %d  ", current->pcb->Priority);
-//        fprintf(outfile, "Address Space: %u\n\n  ", current->pcb->address_space);
-//        current = current->next;
-//    }
-//}
+void printToFile(FILE *outfile, PCB_p pcb_p) {
+    fprintf(outfile, "contents: ");
+    fprintf(outfile, "State: %s  ", getStateName(pcb_p->state));
+    fprintf(outfile, "PID: %d  ", pcb_p->pid);
+    fprintf(outfile, "PC: %u  ", pcb_p->PC);
+    fprintf(outfile, "Priority: %d  ", pcb_p->Priority);
+    fprintf(outfile, "Address Space: %u\n\n", pcb_p->address_space);
+}
+    

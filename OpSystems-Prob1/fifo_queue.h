@@ -50,5 +50,7 @@ PCB_p peek(fifo_queue_p queue);
 int isEmpty(fifo_queue_p queue);
 void to_string_enqueue(fifo_queue_p queue);
 void to_string_dequeue(fifo_queue_p queue, PCB_p p);
+void to_file_enqueue(FILE *outfile, fifo_queue_p queue);
+void to_file_dequeue(FILE *outfile, fifo_queue_p queue, PCB_p p);
 
 #endif /* fifo_queue.h */

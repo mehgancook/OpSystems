@@ -101,39 +101,86 @@ void to_string_enqueue(fifo_queue_p queue) {
         toString(current->pcb);
     }
 }
+//prints the contents of the passed queue to the passed file.
+void to_file_enqueue(FILE *outfile, fifo_queue_p queue) {
+    Node *current = queue->head;
+    if (current == NULL) {
+        fprintf(outfile, "FIFO Queue is empty!");
+    } else {
+        while (current->next != NULL) {
+            fprintf(outfile, "P%d->", current->pcb->pid);
+            current = current->next;
+        }
+        fprintf(outfile, "P%d->", current->pcb->pid);
+        fprintf(outfile, "*\n\n");
+
+        //   toString(current->pcb);
+    }
+}
 
 // Prints the contents of the passed queue. p is the most 
 // recently dequeued Node.
 
 void to_string_dequeue(fifo_queue_p queue, PCB_p p) {
-	Node *current = queue->head;
-        if (current == NULL && p != NULL) {
-             printf("P%d->*\n", p->pid);
-	    printf("*\n");
-            toString(p);
-        } else if (!isEmpty(queue) || p) {	// If queue is not empty
-		if (current->next == NULL) {	// Only one element
-			printf("P%d->P%d->*\n", p->pid, queue->head->pcb->pid);
-			printf("P%d->", queue->head->pcb->pid);
-		} else {
-			printf("P%d->", p->pid);
-			while (current) {
-				printf("P%d->", current->pcb->pid);
-				current = current->next;
-			}
-			printf("*\n");
-			current = queue->head;
-			while (current) {
-				printf("P%d->", current->pcb->pid);
-				current = current->next;
-			}
-		}
-			printf("*\n");
-			toString(p);
+    Node *current = queue->head;
+    if (current == NULL && p != NULL) {
+        printf("P%d->*\n", p->pid);
+        printf("*\n");
+        toString(p);
+    } else if (!isEmpty(queue) || p) { // If queue is not empty
+        if (current->next == NULL) { // Only one element
+            printf("P%d->P%d->*\n", p->pid, queue->head->pcb->pid);
+            printf("P%d->", queue->head->pcb->pid);
         } else {
-		printf("This queue is empty!");
-	}
+            printf("P%d->", p->pid);
+            while (current) {
+                printf("P%d->", current->pcb->pid);
+                current = current->next;
+            }
+            printf("*\n");
+            current = queue->head;
+            while (current) {
+                printf("P%d->", current->pcb->pid);
+                current = current->next;
+            }
+        }
+        printf("*\n");
+        toString(p);
+    } else {
+        printf("This queue is empty!");
+    }
 }
+//prints the contents of the recently dequeued fifo_queue to a file.
+void to_file_dequeue(FILE *outfile, fifo_queue_p queue, PCB_p p) {
+    Node *current = queue->head;
+    if (current == NULL && p != NULL) {
+        fprintf(outfile, "P%d->*\n", p->pid);
+        fprintf(outfile, "*\n");
+        //toString(p);
+    } else if (!isEmpty(queue) || p) { // If queue is not empty
+        if (current->next == NULL) { // Only one element
+            fprintf(outfile, "P%d->P%d->*\n", p->pid, queue->head->pcb->pid);
+            fprintf(outfile, "P%d->", queue->head->pcb->pid);
+        } else {
+            fprintf(outfile, "P%d->", p->pid);
+            while (current) {
+                fprintf(outfile, "P%d->", current->pcb->pid);
+                current = current->next;
+            }
+            fprintf(outfile, "*\n");
+            current = queue->head;
+            while (current) {
+                fprintf(outfile, "P%d->", current->pcb->pid);
+                current = current->next;
+            }
+        }
+        fprintf(outfile, "*\n");
+        //toString(p);
+    } else {
+        fprintf(outfile, "This queue is empty!");
+    }
+}
+
 
 
 

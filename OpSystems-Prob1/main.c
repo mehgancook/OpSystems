@@ -19,26 +19,12 @@ static unsigned int cpu_pc = 0;
 static PCB_p isRunning;
 static fifo_queue_p newQueue;
 static fifo_queue_p readyQueue;
+FILE *outfile;
 static int fourth_context_switching = 1;
 enum interrupt {timer, io};
 
-//#include "pcb_test.h"
-//#include "PriorityQueue_test.h"
-
-// void testFIFO() {
-//     fifo_queue_p q = create_queue();
-//     int j = 0;
-//     int i = 0;
-//     while (i < 5) {
-//         PCB_p pcb = create_pcb(i, j);
-//         enqueue(q, pcb);
-//         i++; j++;
-//           to_string_enqueue(q);
-//     }
-// }
 
 void dispatcher() {
-    printf("made it to dispatcher.");
     int bool = 0;
     if (isRunning != idle && fourth_context_switching % 4 == 0) {
         bool = 1;
@@ -51,34 +37,38 @@ void dispatcher() {
         temp2 = dequeue(readyQueue);
     }
     if (bool) {
-        toString(temp);
-        printf("Switching to ");
-        toString(temp2);
+        fprintf(outfile, "\nRunning PCB:\n");
+        printToFile(outfile, temp);
+        fprintf(outfile, "Switching to:\n");
+        printToFile(outfile, temp2);
     }
     isRunning = temp2;
     systack_pc = isRunning->PC;
     isRunning->state = running;
     if (bool) {
-        toString(isRunning);
-        toString(temp);
-        fourth_context_switching++;
+        fprintf(outfile, "New content of PCBs\n");
+        printToFile(outfile, isRunning);
+        printToFile(outfile, temp);
+        to_file_enqueue(outfile, readyQueue);
+        fprintf(outfile, "\n");
     }
+    fourth_context_switching++;
     return;
 }
 
 void scheduler(enum interrupt interruption) {
     while (!isEmpty(newQueue)) {
         PCB_p pcb = dequeue(newQueue);
-        printf("This pcb has been enqueued from new list:\n");
-        toString(pcb);
+        fprintf(outfile, "This pcb has been enqueued to the ready queue\n");
+        printToFile(outfile, pcb);
         enqueue(readyQueue, pcb);
     }
     if (interruption == timer) {
         isRunning->state = ready;
         if (isRunning != idle) {
             PCB_p pcb = isRunning;
-            printf("This pcb has been enqueued from is running:\n");
-            toString(pcb);
+            fprintf(outfile, "This pcb has been enqueued to the ready queue\n");
+            printToFile(outfile, pcb);
             enqueue(readyQueue, isRunning);
         }
     }
@@ -94,7 +84,8 @@ void pseudo_isr_timer() {
 }
 
 int main(int argc, char** argv) {
-
+    outfile = fopen("scheduleTrace.txt", "w");
+    fprintf(outfile, "GROUP 10:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
     idle = create_pcb(0, 16);
     int bool = 1;
     newQueue = create_queue();
