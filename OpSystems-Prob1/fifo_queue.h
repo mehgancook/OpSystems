@@ -2,7 +2,10 @@
  * fifo_queue.h
  *
  * 	Created on: Jan 7, 2016
- * 		Author: Jonah Howard
+ * 		Authors: Jonah Howard
+ *                       Mehgan Cook
+ *                       Anthony Zullo
+ *                       Quinn Cox
  */
 
 #include <stdio.h>
