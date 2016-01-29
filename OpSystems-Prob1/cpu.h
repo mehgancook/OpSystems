@@ -8,7 +8,10 @@
  * 
  * This program simulates a scheduler implementing the round robin algorithm.
  */
-
+ #include <stdio.h>
+#include <stdlib.h>
+#include "PCB.h"
+#include "fifo_queue.h"
 
 #ifndef CPU_H
 #define CPU_H
@@ -52,7 +55,7 @@ void pseudo_isr_timer(CPU_p cpu);
 /*
  * Runs the program
  */
-int run(CPU_p cpu);
+void run(CPU_p cpu);
 
 #ifdef __cplusplus
 }

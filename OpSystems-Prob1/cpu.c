@@ -91,7 +91,7 @@ void pseudo_isr_timer(CPU_p cpu) {
 /*
  * Runs the program
  */
-int run(CPU_p cpu) {
+void run(CPU_p cpu) {
 
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
@@ -126,6 +126,5 @@ int run(CPU_p cpu) {
         cpu->cpu_pc = cpu->systack_pc;
     }
     fclose(cpu->outfile);
-    return (EXIT_SUCCESS);
 }
 
