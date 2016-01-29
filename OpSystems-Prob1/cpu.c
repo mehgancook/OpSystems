@@ -43,10 +43,11 @@ void dispatcher(CPU_p cpu) {
     cpu->isRunning = temp2;
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
+    temp->state = ready;
     if (bool) {
         fprintf(cpu->outfile, "New content of PCBs\n");
-        printToFile(cpu->outfile, cpu->isRunning);
         printToFile(cpu->outfile, temp);
+        printToFile(cpu->outfile, cpu->isRunning);
         to_file_enqueue(cpu->outfile, cpu->readyQueue);
         fprintf(cpu->outfile, "\n");
     }
@@ -62,7 +63,7 @@ void dispatcher(CPU_p cpu) {
 void scheduler(CPU_p cpu, enum interrupt interruption) {
     while (!isEmpty(cpu->newQueue)) {
         PCB_p pcb = dequeue(cpu->newQueue);
-        pcb->state = running;
+        pcb->state = ready;
         fprintf(cpu->outfile, "This pcb has been enqueued to the ready queue\n");
         printToFile(cpu->outfile, pcb);
         enqueue(cpu->readyQueue, pcb);
@@ -92,7 +93,6 @@ void pseudo_isr_timer(CPU_p cpu) {
  * Runs the program
  */
 void run(CPU_p cpu) {
-
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
     cpu->fourth_context_switching = 1;

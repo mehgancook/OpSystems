@@ -23,8 +23,8 @@
  * ignored. Returns the exit status of the program.
  */
 int main(int argc, char** argv) {
-    CPU_p cpu;
-    run(cpu);
+    CPU cpu;
+    run(&cpu);
     return (EXIT_SUCCESS);
 }
 
