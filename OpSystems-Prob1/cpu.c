@@ -90,7 +90,7 @@ void pseudo_isr_timer(CPU_p cpu) {
 }
 
 /*
- * Runs the program
+ * Runs the program and simulates the CPU 
  */
 void run(CPU_p cpu) {
     cpu->systack_pc = 0;
@@ -113,7 +113,7 @@ void run(CPU_p cpu) {
         }
         int i = rand();
         i = (i % 5) + 1;
-        for (;i > 0; i--) {
+        for (;i > 0 && pidCounter < 31; i--) {
             enqueue(cpu->newQueue, create_pcb(pidCounter++, 0));
         }
         if (isEmpty(cpu->readyQueue)) {
