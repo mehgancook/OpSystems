@@ -6,184 +6,184 @@ Mehgan Cook
 
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 1  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 1  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 2  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 2  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 3  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 3  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 4  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 4  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 5  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 5  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 6  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 6  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 7  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 7  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 1  PC: 3328  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 8  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 8  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 2  PC: 3586  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 9  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 9  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 10  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 10  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 11  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 11  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 3  PC: 3713  Priority: 0  Address Space: 0
 
 
 Running PCB:
-contents: State: READY  PID: 3  PC: 3713  Priority: 0  Address Space: 0
+contents: State: RUNNING  PID: 3  PC: 3713  Priority: 0  Address Space: 0
 
 Switching to:
-contents: State: NEW  PID: 4  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 4  PC: 0  Priority: 0  Address Space: 0
 
 New content of PCBs
-contents: State: RUNNING  PID: 4  PC: 0  Priority: 0  Address Space: 0
-
 contents: State: READY  PID: 3  PC: 3713  Priority: 0  Address Space: 0
+
+contents: State: RUNNING  PID: 4  PC: 0  Priority: 0  Address Space: 0
 
 P5->P6->P7->P1->P8->P2->P9->P10->P11->P3->*
 
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 12  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 12  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 13  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 13  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 4  PC: 3772  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 14  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 14  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 15  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 15  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 5  PC: 3963  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 16  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 16  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 17  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 17  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 18  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 18  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 19  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 19  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 6  PC: 3312  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 20  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 20  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 21  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 21  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 22  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 22  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 23  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 23  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 7  PC: 3029  Priority: 0  Address Space: 0
 
 
 Running PCB:
-contents: State: READY  PID: 7  PC: 3029  Priority: 0  Address Space: 0
+contents: State: RUNNING  PID: 7  PC: 3029  Priority: 0  Address Space: 0
 
 Switching to:
 contents: State: READY  PID: 1  PC: 3328  Priority: 0  Address Space: 0
 
 New content of PCBs
-contents: State: RUNNING  PID: 1  PC: 3328  Priority: 0  Address Space: 0
-
 contents: State: READY  PID: 7  PC: 3029  Priority: 0  Address Space: 0
+
+contents: State: RUNNING  PID: 1  PC: 3328  Priority: 0  Address Space: 0
 
 P8->P2->P9->P10->P11->P3->P12->P13->P4->P14->P15->P5->P16->P17->P18->P19->P6->P20->P21->P22->P23->P7->*
 
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 24  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 24  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 1  PC: 6777  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 25  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 25  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 26  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 26  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 27  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 27  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 28  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 28  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 29  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 29  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 8  PC: 3063  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 30  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 30  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 31  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 31  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 32  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 32  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 2  PC: 7479  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 33  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 33  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 34  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 34  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: NEW  PID: 35  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 35  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 9  PC: 3030  Priority: 0  Address Space: 0
 
 
 Running PCB:
-contents: State: READY  PID: 9  PC: 3030  Priority: 0  Address Space: 0
+contents: State: RUNNING  PID: 9  PC: 3030  Priority: 0  Address Space: 0
 
 Switching to:
-contents: State: NEW  PID: 10  PC: 0  Priority: 0  Address Space: 0
+contents: State: READY  PID: 10  PC: 0  Priority: 0  Address Space: 0
 
 New content of PCBs
-contents: State: RUNNING  PID: 10  PC: 0  Priority: 0  Address Space: 0
-
 contents: State: READY  PID: 9  PC: 3030  Priority: 0  Address Space: 0
+
+contents: State: RUNNING  PID: 10  PC: 0  Priority: 0  Address Space: 0
 
 P11->P3->P12->P13->P4->P14->P15->P5->P16->P17->P18->P19->P6->P20->P21->P22->P23->P7->P24->P1->P25->P26->P27->P28->P29->P8->P30->P31->P32->P2->P33->P34->P35->P9->*
 

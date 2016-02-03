@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/PCB.o \
 	${OBJECTDIR}/PriorityQueue.o \
 	${OBJECTDIR}/PriorityQueue_test.o \
+	${OBJECTDIR}/cpu.o \
 	${OBJECTDIR}/fifo_queue.o \
 	${OBJECTDIR}/fifo_queue_test.o \
 	${OBJECTDIR}/main.o \
@@ -83,6 +84,11 @@ ${OBJECTDIR}/PriorityQueue_test.o: PriorityQueue_test.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PriorityQueue_test.o PriorityQueue_test.c
+
+${OBJECTDIR}/cpu.o: cpu.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cpu.o cpu.c
 
 ${OBJECTDIR}/fifo_queue.o: fifo_queue.c 
 	${MKDIR} -p ${OBJECTDIR}
