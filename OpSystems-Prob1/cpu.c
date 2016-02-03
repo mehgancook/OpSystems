@@ -100,7 +100,7 @@ void run(CPU_p cpu) {
     cpu->outfile = fopen("scheduleTrace.txt", "w");
     fprintf(cpu->outfile, "GROUP 10:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
 
-    cpu->idle = create_pcb(0, 16);
+    cpu->idle = create_pcb(0, 16, 0);
     cpu->newQueue = create_queue();
     cpu->readyQueue = create_queue();
 
@@ -114,7 +114,7 @@ void run(CPU_p cpu) {
         int i = rand();
         i = (i % 5) + 1;
         for (;i > 0 && pidCounter < 31; i--) {
-            enqueue(cpu->newQueue, create_pcb(pidCounter++, 0));
+            enqueue(cpu->newQueue, create_pcb(pidCounter++, 0, 0));
         }
         if (isEmpty(cpu->readyQueue)) {
             cpu->isRunning = cpu->idle;
