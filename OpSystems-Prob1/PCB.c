@@ -30,8 +30,6 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     pcb_p->TERMINATION = 0;
     pcb_p->TERMINATE = 0;
     pcb_p->TERM_COUNT = 0;
-    pcb_p->IO_1_TRAPS[4] = {0,0,0,0};
-    pcb_p->IO_2_TRAPS[4] = {0,0,0,0};
     return pcb_p;
 }
 
