@@ -16,7 +16,7 @@
 /**
  * creates the pcb
  */
-PCB_p create_pcb(int thePid, int thePriority) {
+PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     PCB_p pcb_p = malloc(sizeof(PCB));
     pcb_p->state = new; /* current state  of the pcb */
     pcb_p->pid = thePid; /** id of the pid */
@@ -24,6 +24,14 @@ PCB_p create_pcb(int thePid, int thePriority) {
 //    struct PCB *next_pcb; /* list ptr */
     pcb_p->Priority = thePriority; /* extrinsic property */
     pcb_p->address_space = 0; /* where in memory */
+
+    pcb_p->MAX_PC = 2345;
+    pcb_p->CREATION = theCreationTime;
+    pcb_p->TERMINATION = 0;
+    pcb_p->TERMINATE = 0;
+    pcb_p->TERM_COUNT = 0;
+    pcb_p->IO_1_TRAPS[4] = {0,0,0,0};
+    pcb_p->IO_2_TRAPS[4] = {0,0,0,0};
     return pcb_p;
 }
 

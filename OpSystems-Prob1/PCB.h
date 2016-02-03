@@ -29,6 +29,14 @@ typedef struct pcb {
 //    struct PCB *next_pcb; /* list ptr */
     int Priority; /* extrinsic property */
     address address_space; /* where in memory */
+
+    int MAX_PC;
+    int CREATION;
+    int TERMINATION;
+    int TERMINATE;
+    int TERM_COUNT;
+    int IO_1_TRAPS[4];
+    int IO_2_TRAPS[4];
     int reg_file[NUMREGS]; /* contents of GPRs */
 } PCB;
 
