@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/PriorityQueue.o \
 	${OBJECTDIR}/PriorityQueue_test.o \
 	${OBJECTDIR}/cpu.o \
+	${OBJECTDIR}/cpubackup.o \
 	${OBJECTDIR}/fifo_queue.o \
 	${OBJECTDIR}/fifo_queue_test.o \
 	${OBJECTDIR}/main.o \
@@ -89,6 +90,11 @@ ${OBJECTDIR}/cpu.o: cpu.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cpu.o cpu.c
+
+${OBJECTDIR}/cpubackup.o: cpubackup.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cpubackup.o cpubackup.c
 
 ${OBJECTDIR}/fifo_queue.o: fifo_queue.c 
 	${MKDIR} -p ${OBJECTDIR}

@@ -153,22 +153,7 @@ This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 30  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
-contents: State: READY  PID: 31  PC: 0  Priority: 0  Address Space: 0
-
-This pcb has been enqueued to the ready queue
-contents: State: READY  PID: 32  PC: 0  Priority: 0  Address Space: 0
-
-This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 2  PC: 7479  Priority: 0  Address Space: 0
-
-This pcb has been enqueued to the ready queue
-contents: State: READY  PID: 33  PC: 0  Priority: 0  Address Space: 0
-
-This pcb has been enqueued to the ready queue
-contents: State: READY  PID: 34  PC: 0  Priority: 0  Address Space: 0
-
-This pcb has been enqueued to the ready queue
-contents: State: READY  PID: 35  PC: 0  Priority: 0  Address Space: 0
 
 This pcb has been enqueued to the ready queue
 contents: State: READY  PID: 9  PC: 3030  Priority: 0  Address Space: 0
@@ -185,6 +170,6 @@ contents: State: READY  PID: 9  PC: 3030  Priority: 0  Address Space: 0
 
 contents: State: RUNNING  PID: 10  PC: 0  Priority: 0  Address Space: 0
 
-P11->P3->P12->P13->P4->P14->P15->P5->P16->P17->P18->P19->P6->P20->P21->P22->P23->P7->P24->P1->P25->P26->P27->P28->P29->P8->P30->P31->P32->P2->P33->P34->P35->P9->*
+P11->P3->P12->P13->P4->P14->P15->P5->P16->P17->P18->P19->P6->P20->P21->P22->P23->P7->P24->P1->P25->P26->P27->P28->P29->P8->P30->P2->P9->*
 
 
