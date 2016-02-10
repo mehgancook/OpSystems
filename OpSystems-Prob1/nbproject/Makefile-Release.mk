@@ -39,11 +39,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/PriorityQueue.o \
 	${OBJECTDIR}/PriorityQueue_test.o \
 	${OBJECTDIR}/cpu.o \
-	${OBJECTDIR}/cpubackup.o \
 	${OBJECTDIR}/fifo_queue.o \
 	${OBJECTDIR}/fifo_queue_test.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/pcb_test.o \
 	${OBJECTDIR}/print.o
 
 
@@ -65,11 +63,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob3.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob3.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob3 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/PCB.o: PCB.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -91,11 +89,6 @@ ${OBJECTDIR}/cpu.o: cpu.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cpu.o cpu.c
 
-${OBJECTDIR}/cpubackup.o: cpubackup.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cpubackup.o cpubackup.c
-
 ${OBJECTDIR}/fifo_queue.o: fifo_queue.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -111,11 +104,6 @@ ${OBJECTDIR}/main.o: main.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
-${OBJECTDIR}/pcb_test.o: pcb_test.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pcb_test.o pcb_test.c
-
 ${OBJECTDIR}/print.o: print.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -127,7 +115,7 @@ ${OBJECTDIR}/print.o: print.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob3.exe
 
 # Subprojects
 .clean-subprojects:

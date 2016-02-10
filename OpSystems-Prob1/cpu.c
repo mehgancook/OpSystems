@@ -15,6 +15,87 @@
 #include "PCB.h"
 #include "fifo_queue.h"
 #include "cpu.h"
+#define timerInitTime 300
+#define num_pcbs 6
+#define max_sys_timer 10000
+
+// Global variables
+int pidCounter = 0;
+int computerTime = 0;
+int currentTimerTime = timerInitTime;
+int ioTimerTime1;
+int ioTimerTime2;
+int initialioTimerTime1;
+int initialioTimerTime2;
+fifo_queue_p terminateQueue;
+fifo_queue_p ioWaitingQueue1;
+fifo_queue_p ioWaitingQueue2;
+
+void ReadyQueueToIsRunning(CPU_p cpu) {
+    if (!isEmpty(cpu->readyQueue)) {
+        cpu->isRunning = dequeue(cpu->readyQueue);
+    } else {
+        cpu->isRunning = cpu->idle;
+    }
+}
+
+void dequeueReadyQueue(CPU_p cpu) {
+    cpu->isRunning->state = ready;
+    if (cpu->isRunning != cpu->idle) {
+        PCB_p pcb = cpu->isRunning;
+        if (!isEmpty(cpu->readyQueue)) {
+            fprintf(cpu->outfile, "This pcb has been enqueued to the ready queue\n");
+            printToFile(cpu->outfile, pcb);
+        } else {
+            cpu->isRunning = cpu->idle;
+        }
+        enqueue(cpu->readyQueue, cpu->isRunning);
+    }
+}
+
+void initialize_IO_trap_array(PCB_p pcb) {
+    int io[8] = {0};
+    int i, random;
+    int unique = 1;
+    for (i = 0; i < 8; i++) {
+        int bool = 1;
+        while (bool) {
+            random = (rand() % (pcb->MAX_PC - 1)) + 1;
+            int j = 0;
+            for (; j < 8; j++) {
+                if (io[j] == random) {
+                    break;
+                }
+            }
+            if (j == 8) {
+                bool = 0;
+            }
+        }
+        io[i] = random;
+        if (i < 4) {
+            pcb->IO_1_TRAPS[i] = random;
+        } else {
+            pcb->IO_2_TRAPS[i - 4] = random; 
+        }
+    } 
+}
+
+void initialize(CPU_p cpu) {
+    int i = rand();
+    i = (i % 5) + 1;
+    for (;i > 0 && pidCounter < num_pcbs; i--) {
+        PCB_p pcb = create_pcb(pidCounter++, 0, 0);
+        pcb->MAX_PC = (rand() % 2001) + 2000;
+        pcb->TERMINATE = (rand() % 31) + 30;
+        initialize_IO_trap_array(pcb);
+        enqueue(cpu->newQueue, pcb);
+    }
+      // assign MAX_PC with a random number between 2000 - 4000
+      // assign Terminate value with a random number between 0 - 30
+      // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
+}
+
+
 
 
 /*
@@ -23,6 +104,7 @@
  */
 void dispatcher(CPU_p cpu) {
     int bool = 0;
+    
     if (cpu->isRunning != cpu->idle && cpu->fourth_context_switching % 4 == 0) {
         bool = 1;
     }
@@ -53,6 +135,38 @@ void dispatcher(CPU_p cpu) {
     }
     cpu->fourth_context_switching++;
     return;
+}
+
+int timerInterrupt() {
+    currentTimerTime--;
+    if (currentTimerTime <= 0) {
+        currentTimerTime = timerInitTime; 
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int iointerrupt1(CPU_p cpu) {
+    ioTimerTime1--;
+    if (ioTimerTime1 <= 0 && !isEmpty(ioWaitingQueue1)) {
+        ioTimerTime1 = initialioTimerTime1;
+        enqueue(cpu->readyQueue, dequeue(ioWaitingQueue1));
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int iointerrupt2(CPU_p cpu) {
+    ioTimerTime2--;
+    if (ioTimerTime2 <= 0 && !isEmpty(ioWaitingQueue2)) {
+        ioTimerTime2 = initialioTimerTime2;
+        enqueue(cpu->readyQueue, dequeue(ioWaitingQueue2));
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 /* 
@@ -89,6 +203,28 @@ void pseudo_isr_timer(CPU_p cpu) {
     return;
 }
 
+void trapHandler(CPU_p cpu, int io) {
+    if (io == 1){
+        enqueue(ioWaitingQueue1 ,cpu->isRunning);
+        ReadyQueueToIsRunning(cpu);
+    } else if (io == 2) {
+        enqueue(ioWaitingQueue2 ,cpu->isRunning);
+        ReadyQueueToIsRunning(cpu);
+    }
+}
+
+void checkForTrapArrays(CPU_p cpu) {
+    int i = 0;
+    for (; i < 4; i++) {
+        if(cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
+            trapHandler(cpu, 1);
+            break;
+        } else if(cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC){
+            trapHandler(cpu, 2);
+            break;
+        }
+    }
+}
 /*
  * Runs the program and simulates the CPU 
  */
@@ -96,35 +232,68 @@ void run(CPU_p cpu) {
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
     cpu->fourth_context_switching = 1;
+    terminateQueue = create_queue();
+    ioWaitingQueue1 = create_queue();
+    ioWaitingQueue2 = create_queue();
+    ioTimerTime1 = ((rand() % 3) + 3) * timerInitTime;
+    ioTimerTime2 = ((rand() % 3) + 3) * timerInitTime;
+    initialioTimerTime1 = ioTimerTime1;
+    initialioTimerTime2 = ioTimerTime2;
 
     cpu->outfile = fopen("scheduleTrace.txt", "w");
     fprintf(cpu->outfile, "GROUP 10:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
 
     cpu->idle = create_pcb(0, 16, 0);
+    cpu->idle->MAX_PC = -1;
+    cpu->idle->TERMINATE = 0;
+    int i = 0;
+    for (; i < 4; i++) {
+        cpu->idle->IO_1_TRAPS[i] = -1;
+        cpu->idle->IO_2_TRAPS[i] = -1;
+    }
+    
     cpu->newQueue = create_queue();
     cpu->readyQueue = create_queue();
-
+    
+    if (isEmpty(cpu->readyQueue)) {
+        cpu->isRunning = cpu->idle;
+    }
+    
+    initialize(cpu);
     int bool = 1;
     int pidCounter = 1;
     // Each iteration represents one timer quantum
-    while (bool) {
-        if (pidCounter > 30) {
-            bool = 0;
+    //computerTime < max_sys_timer
+    while (1) {
+        computerTime++;
+        cpu->isRunning->PC ++;
+  
+
+
+        if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
+            cpu->isRunning->PC = 0;
+            if (!cpu->isRunning->TERMINATE && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
+                cpu->isRunning->TERMINATION_TIME = computerTime;
+                enqueue(&terminateQueue, cpu->isRunning);
+                cpu->isRunning = dequeue(cpu->readyQueue);
+                computerTime = timerInitTime;
+            }
         }
-        int i = rand();
-        i = (i % 5) + 1;
-        for (;i > 0 && pidCounter < 31; i--) {
-            enqueue(cpu->newQueue, create_pcb(pidCounter++, 0, 0));
+        int timerRun = timerInterrupt();
+        if (timerRun) {
+            pseudo_isr_timer(cpu);
+        } else {
+            iointerrupt1(cpu);
+            iointerrupt2(cpu);        
+            checkForTrapArrays(cpu);
         }
-        if (isEmpty(cpu->readyQueue)) {
-            cpu->isRunning = cpu->idle;
-        }
-        unsigned int random = (rand() % 1001) + 3000;
-        cpu->cpu_pc += random;
-        cpu->systack_pc = cpu->cpu_pc;
-        pseudo_isr_timer(cpu);
-        cpu->cpu_pc = cpu->systack_pc;
+        printf("working\n");
+        
+//        unsigned int random = (rand() % 1001) + 3000;
+//        cpu->cpu_pc += random;
+//        cpu->systack_pc = cpu->cpu_pc;
+//        pseudo_isr_timer(cpu);
+//        cpu->cpu_pc = cpu->systack_pc;
     }
     fclose(cpu->outfile);
 }
-
