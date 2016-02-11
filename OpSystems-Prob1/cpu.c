@@ -15,6 +15,7 @@
 #include "PCB.h"
 #include "fifo_queue.h"
 #include "cpu.h"
+
 #define timerInitTime 300
 #define num_pcbs 6
 #define max_sys_timer 10000
@@ -31,6 +32,8 @@ fifo_queue_p terminateQueue;
 fifo_queue_p ioWaitingQueue1;
 fifo_queue_p ioWaitingQueue2;
 
+
+// Transfer the next PCB from the ready queue to currently running
 void ReadyQueueToIsRunning(CPU_p cpu) {
     if (!isEmpty(cpu->readyQueue)) {
         cpu->isRunning = dequeue(cpu->readyQueue);
@@ -39,6 +42,8 @@ void ReadyQueueToIsRunning(CPU_p cpu) {
     }
 }
 
+// Transfers currently running process to the ready queue so long as the 
+// currently running process is not the idle process.
 void dequeueReadyQueue(CPU_p cpu) {
     cpu->isRunning->state = ready;
     if (cpu->isRunning != cpu->idle) {
@@ -53,12 +58,13 @@ void dequeueReadyQueue(CPU_p cpu) {
     }
 }
 
+// Initializes both I/O trap arrays for the passed PCB.
 void initialize_IO_trap_array(PCB_p pcb) {
     int io[8] = {0};
     int i, random;
-    int unique = 1;
+    int bool;
     for (i = 0; i < 8; i++) {
-        int bool = 1;
+        bool = 1;
         while (bool) {
             random = (rand() % (pcb->MAX_PC - 1)) + 1;
             int j = 0;
@@ -72,6 +78,7 @@ void initialize_IO_trap_array(PCB_p pcb) {
             }
         }
         io[i] = random;
+        // Fill each trap array
         if (i < 4) {
             pcb->IO_1_TRAPS[i] = random;
         } else {
@@ -80,6 +87,7 @@ void initialize_IO_trap_array(PCB_p pcb) {
     } 
 }
 
+// Initialize a random number of PCB's and places them into the new Queue.
 void initialize(CPU_p cpu) {
     int i = rand();
     i = (i % 5) + 1;
@@ -137,6 +145,8 @@ void dispatcher(CPU_p cpu) {
     return;
 }
 
+// Simulates a timer interrupt. Returns 1 if a timer interrupt has occurred,
+// 0 otherwise.
 int timerInterrupt() {
     currentTimerTime--;
     if (currentTimerTime <= 0) {
@@ -147,6 +157,8 @@ int timerInterrupt() {
     }
 }
 
+// Simulates I/O being processed. Returns 1 if I/O interrupt has occurred, 0
+// otherwise.
 int iointerrupt1(CPU_p cpu) {
     ioTimerTime1--;
     if (ioTimerTime1 <= 0 && !isEmpty(ioWaitingQueue1)) {
@@ -203,8 +215,9 @@ void pseudo_isr_timer(CPU_p cpu) {
     return;
 }
 
+// Transfers currently running PCB to respective I/O waiting queue
 void trapHandler(CPU_p cpu, int io) {
-    if (io == 1){
+    if (io == 1) {
         enqueue(ioWaitingQueue1 ,cpu->isRunning);
         ReadyQueueToIsRunning(cpu);
     } else if (io == 2) {
@@ -213,6 +226,7 @@ void trapHandler(CPU_p cpu, int io) {
     }
 }
 
+// Checks if an I/O interrupt has occurred 
 void checkForTrapArrays(CPU_p cpu) {
     int i = 0;
     for (; i < 4; i++) {
@@ -267,9 +281,8 @@ void run(CPU_p cpu) {
     while (1) {
         computerTime++;
         cpu->isRunning->PC ++;
-  
 
-
+        // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
             cpu->isRunning->PC = 0;
             if (!cpu->isRunning->TERMINATE && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
@@ -279,21 +292,15 @@ void run(CPU_p cpu) {
                 computerTime = timerInitTime;
             }
         }
-        int timerRun = timerInterrupt();
-        if (timerRun) {
+        // Check for timer interrupt
+        if (timerInterrupt()) {
             pseudo_isr_timer(cpu);
         } else {
+            // Check for IO interrupts
             iointerrupt1(cpu);
             iointerrupt2(cpu);        
             checkForTrapArrays(cpu);
         }
-        printf("working\n");
-        
-//        unsigned int random = (rand() % 1001) + 3000;
-//        cpu->cpu_pc += random;
-//        cpu->systack_pc = cpu->cpu_pc;
-//        pseudo_isr_timer(cpu);
-//        cpu->cpu_pc = cpu->systack_pc;
     }
     fclose(cpu->outfile);
 }
