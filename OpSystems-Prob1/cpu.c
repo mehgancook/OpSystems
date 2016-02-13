@@ -20,18 +20,6 @@
 #define num_pcbs 10
 #define max_sys_timer 20000
 
-//// Global variables
-//int pidCounter = 0;
-//int computerTime = 0;
-//int currentTimerTime = timerInitTime;
-//int ioTimerTime1;
-//int ioTimerTime2;
-//int initialioTimerTime1;
-//int initialioTimerTime2;
-//fifo_queue_p terminateQueue;
-//fifo_queue_p ioWaitingQueue1;
-//fifo_queue_p ioWaitingQueue2;
-
 
 // Transfer the next PCB from the ready queue to currently running
 void ReadyQueueToIsRunning(CPU_p cpu) {
