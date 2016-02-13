@@ -17,7 +17,7 @@
 #include "cpu.h"
 
 #define timerInitTime 300
-#define num_pcbs 6
+#define num_pcbs 100
 #define max_sys_timer 300000
 
 
@@ -38,8 +38,6 @@ void dequeueReadyQueue(CPU_p cpu) {
     if (cpu->isRunning != cpu->idle) {
         PCB_p pcb = cpu->isRunning;
         if (!isEmpty(cpu->readyQueue)) {
-          //  fprintf(cpu->outfile, "This pcb has been enqueued to the ready queue\n");
-           // printToFile(cpu->outfile, pcb);
         } else {
             cpu->isRunning = cpu->idle;
         }
@@ -78,24 +76,23 @@ void initialize_IO_trap_array(PCB_p pcb) {
 
 // Initialize a random number of PCB's and places them into the new Queue.
 void initialize(CPU_p cpu) {
+    time_t t;
+    srand((unsigned) time(&t));
     int i = rand();
     i = (i % 5) + 1;
    // for (;i > 0 && pidCounter < num_pcbs; i--) {
     while (cpu->pidCounter < num_pcbs) {
         PCB_p pcb = create_pcb(cpu->pidCounter++, 0, 0);
         fprintf(cpu->outfile,"Process created: PID %d at %d\n", pcb->pid, cpu->computerTime);
+        // assign MAX_PC with a random number between 2000 - 4000
         pcb->MAX_PC = (rand() % 2001) + 2000;
-        pcb->TERMINATE = (rand() % 31) + 30;
+        // assign Terminate value with a random number between 0 - 30
+        pcb->TERMINATE = (rand() % 31);
+        // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
         initialize_IO_trap_array(pcb);
         enqueue(cpu->newQueue, pcb);
-    }
-      // assign MAX_PC with a random number between 2000 - 4000
-      // assign Terminate value with a random number between 0 - 30
-      // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
+    }  
 }
-
-
-
 
 /*
  * Simulates an operating system dispatcher. Pulls next available PCB from the 
@@ -105,6 +102,8 @@ void dispatcher(CPU_p cpu) {
     int bool = 0;
     
     if (cpu->isRunning != cpu->idle && cpu->fourth_context_switching % 4 == 0) {
+        bool = 1;
+    } else {
         bool = 1;
     }
     PCB_p temp = cpu->isRunning;
@@ -116,23 +115,12 @@ void dispatcher(CPU_p cpu) {
     }
     if (bool) {
         fprintf(cpu->outfile,"Timer interrupt: PID %d was running, PID %d dispatched\n", temp->pid, temp2->pid);
-       // fprintf(cpu->outfile, "\nRunning PCB:\n");
         temp->state = running;
-       // printToFile(cpu->outfile, temp);
-       // fprintf(cpu->outfile, "Switching to:\n");
-       // printToFile(cpu->outfile, temp2);
     }
     cpu->isRunning = temp2;
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
     temp->state = ready;
-    if (bool) {
-     //   fprintf(cpu->outfile, "New content of PCBs\n");
-     //   printToFile(cpu->outfile, temp);
-     //   printToFile(cpu->outfile, cpu->isRunning);
-     //   to_file_enqueue(cpu->outfile, cpu->readyQueue);
-     //   fprintf(cpu->outfile, "\n");
-    }
     cpu->fourth_context_switching++;
     return;
 }
@@ -141,7 +129,6 @@ void dispatcher(CPU_p cpu) {
 // 0 otherwise.
 int timerInterrupt(CPU_p cpu) {
     cpu->currentTimerTime--;
- //   cpu->currentTimerTime--;
     if (cpu->currentTimerTime <= 0) {
         cpu->currentTimerTime = timerInitTime; 
         return 1;
@@ -185,16 +172,12 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
     while (!isEmpty(cpu->newQueue)) {
         PCB_p pcb = dequeue(cpu->newQueue);
         pcb->state = ready;
-      //  fprintf(cpu->outfile, "This pcb has been enqueued to the ready queue\n");
-      //  printToFile(cpu->outfile, pcb);
         enqueue(cpu->readyQueue, pcb);
     }
     if (interruption == timer) {
         cpu->isRunning->state = ready;
         if (cpu->isRunning != cpu->idle) {
             PCB_p pcb = cpu->isRunning;
-         //   fprintf(cpu->outfile, "This pcb has been enqueued to the ready queue\n");
-         //   printToFile(cpu->outfile, pcb);
             enqueue(cpu->readyQueue, cpu->isRunning);
         }
     }
@@ -205,7 +188,6 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
 // Simulates an isr timer and calls the scheduler.
 void pseudo_isr_timer(CPU_p cpu) {
     cpu->isRunning->state = interrupted;
-    //cpu->isRunning->PC = cpu->systack_pc;
     scheduler(cpu, timer);
     return;
 }
@@ -257,7 +239,7 @@ void run(CPU_p cpu) {
     cpu->outfile = fopen("discontinuities.txt", "w");
     fprintf(cpu->outfile, "GROUP 9:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
 
-    cpu->idle = create_pcb(0, 16, 0);
+    cpu->idle = create_pcb(-1, 16, 0);
     cpu->idle->MAX_PC = -1;
     cpu->idle->TERMINATE = 0;
     int i = 0;
@@ -277,21 +259,17 @@ void run(CPU_p cpu) {
     int bool = 1;
     cpu->pidCounter = 1;
     // Each iteration represents one timer quantum
-    //computerTime < max_sys_timer
+    //if you want to terminate at a set time:
     //cpu->computerTime < max_sys_timer
     while (1) {
         cpu->computerTime++;
         cpu->isRunning->PC++;
 
-      //printf("MAX: %d PC: %d\n", cpu->isRunning->MAX_PC, cpu->isRunning->PC);
-        //          fprintf(cpu->outfile, "\n\n\n\PC %d MAX PC %d TERMINATE %d TERM COUNT %d",cpu->isRunning->PC, cpu->isRunning->MAX_PC, cpu->isRunning->TERMINATE, cpu->isRunning->TERM_COUNT);
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
-            fprintf(cpu->outfile, "DO I MAKE IT HERE\n");
             cpu->isRunning->PC = 0;
             cpu->isRunning->TERM_COUNT++;
             if (cpu->isRunning->TERMINATE != 0  && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
-                fprintf(cpu->outfile, "WILL I MAKE IT HERE\n");
                 printf("Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime);
                 cpu->isRunning->TERMINATION = cpu->computerTime;
                 fprintf(cpu->outfile,"Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime); 
