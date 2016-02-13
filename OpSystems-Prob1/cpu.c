@@ -297,7 +297,7 @@ void run(CPU_p cpu) {
                 fprintf(cpu->outfile,"Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime); 
                 enqueue(cpu->terminateQueue, cpu->isRunning);
                 ReadyQueueToIsRunning(cpu);
-                cpu->computerTime = timerInitTime;
+                cpu->currentTimerTime = timerInitTime;
             }
         }
         // Check for timer interrupt
