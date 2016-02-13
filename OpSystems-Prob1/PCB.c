@@ -27,7 +27,7 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
 
     pcb_p->MAX_PC = 2345;
     pcb_p->CREATION = theCreationTime;
-    pcb_p->TERMINATION_TIME = 0;
+    pcb_p->TERMINATION = 0;
     pcb_p->TERMINATE = 0;
     pcb_p->TERM_COUNT = 0;
     return pcb_p;
