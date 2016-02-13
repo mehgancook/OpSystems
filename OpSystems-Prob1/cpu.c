@@ -205,7 +205,7 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
 // Simulates an isr timer and calls the scheduler.
 void pseudo_isr_timer(CPU_p cpu) {
     cpu->isRunning->state = interrupted;
-    cpu->isRunning->PC = cpu->systack_pc;
+    //cpu->isRunning->PC = cpu->systack_pc;
     scheduler(cpu, timer);
     return;
 }
@@ -278,10 +278,12 @@ void run(CPU_p cpu) {
     cpu->pidCounter = 1;
     // Each iteration represents one timer quantum
     //computerTime < max_sys_timer
-    while (cpu->computerTime < max_sys_timer) {
+    //cpu->computerTime < max_sys_timer
+    while (1) {
         cpu->computerTime++;
         cpu->isRunning->PC++;
-      //  printf("MAX: %d PC: %d\n", cpu->isRunning->MAX_PC, cpu->isRunning->PC);
+
+      //printf("MAX: %d PC: %d\n", cpu->isRunning->MAX_PC, cpu->isRunning->PC);
         //          fprintf(cpu->outfile, "\n\n\n\PC %d MAX PC %d TERMINATE %d TERM COUNT %d",cpu->isRunning->PC, cpu->isRunning->MAX_PC, cpu->isRunning->TERMINATE, cpu->isRunning->TERM_COUNT);
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
@@ -290,10 +292,11 @@ void run(CPU_p cpu) {
             cpu->isRunning->TERM_COUNT++;
             if (cpu->isRunning->TERMINATE != 0  && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
                 fprintf(cpu->outfile, "WILL I MAKE IT HERE\n");
+                printf("Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime);
                 cpu->isRunning->TERMINATION = cpu->computerTime;
                 fprintf(cpu->outfile,"Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime); 
-                enqueue(&cpu->terminateQueue, cpu->isRunning);
-                cpu->isRunning = dequeue(cpu->readyQueue);
+                enqueue(cpu->terminateQueue, cpu->isRunning);
+                ReadyQueueToIsRunning(cpu);
                 cpu->computerTime = timerInitTime;
             }
         }
