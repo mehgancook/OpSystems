@@ -32,7 +32,7 @@ typedef struct pcb {
 
     int MAX_PC;
     int CREATION;
-    int TERMINATION_TIME;
+    int TERMINATION;
     int TERMINATE;
     int TERM_COUNT;
     int IO_1_TRAPS[4];
