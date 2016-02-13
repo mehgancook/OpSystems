@@ -17,8 +17,8 @@
 #include "cpu.h"
 
 #define timerInitTime 300
-#define num_pcbs 10
-#define max_sys_timer 20000
+#define num_pcbs 6
+#define max_sys_timer 300000
 
 
 // Transfer the next PCB from the ready queue to currently running
@@ -253,7 +253,7 @@ void run(CPU_p cpu) {
     cpu->ioTimerTime2 = ((rand() % 3) + 3) * timerInitTime;
     cpu->initialioTimerTime1 = cpu->ioTimerTime1;
     cpu->initialioTimerTime2 = cpu->ioTimerTime2;
-
+    
     cpu->outfile = fopen("discontinuities.txt", "w");
     fprintf(cpu->outfile, "GROUP 9:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
 
@@ -280,12 +280,16 @@ void run(CPU_p cpu) {
     //computerTime < max_sys_timer
     while (cpu->computerTime < max_sys_timer) {
         cpu->computerTime++;
-        cpu->isRunning->PC ++;
-
+        cpu->isRunning->PC++;
+      //  printf("MAX: %d PC: %d\n", cpu->isRunning->MAX_PC, cpu->isRunning->PC);
+        //          fprintf(cpu->outfile, "\n\n\n\PC %d MAX PC %d TERMINATE %d TERM COUNT %d",cpu->isRunning->PC, cpu->isRunning->MAX_PC, cpu->isRunning->TERMINATE, cpu->isRunning->TERM_COUNT);
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
+            fprintf(cpu->outfile, "DO I MAKE IT HERE\n");
             cpu->isRunning->PC = 0;
-            if (!cpu->isRunning->TERMINATE && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
+            cpu->isRunning->TERM_COUNT++;
+            if (cpu->isRunning->TERMINATE != 0  && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
+                fprintf(cpu->outfile, "WILL I MAKE IT HERE\n");
                 cpu->isRunning->TERMINATION = cpu->computerTime;
                 fprintf(cpu->outfile,"Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime); 
                 enqueue(&cpu->terminateQueue, cpu->isRunning);
