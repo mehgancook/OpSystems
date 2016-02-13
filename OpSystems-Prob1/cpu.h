@@ -32,6 +32,16 @@ typedef struct cpu {
     fifo_queue_p readyQueue;
     FILE *outfile;
     int fourth_context_switching;
+    int pidCounter;
+    int computerTime;
+    int currentTimerTime;
+    int ioTimerTime1;
+    int ioTimerTime2;
+    int initialioTimerTime1;
+    int initialioTimerTime2;
+    fifo_queue_p terminateQueue;
+    fifo_queue_p ioWaitingQueue1;
+    fifo_queue_p ioWaitingQueue2;
 } CPU;
 
 typedef CPU *CPU_p;
