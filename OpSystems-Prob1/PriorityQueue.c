@@ -83,6 +83,19 @@ PCB_p dequeue_priority(priority_queue_p queue) {
     return answerPCB;
 }
 
+int isEmptyReadyQueue(priority_queue_p queue) {
+    int i = 0;
+    int flag = 1;
+    while (i < NumberOfPriorities) {
+        if (!isEmpty(queue->MainArray[i])) {
+            flag = 0;           
+        }
+        i++;
+    }
+    return flag;
+}
+
+
 //returns the next PCB pointer in the priority queue or null if none in all the queues
 //PCB_p GetNext(fifo_queue *theArray) {
 //    //fifo_queue *theArray = thePQ->startOfArray;
