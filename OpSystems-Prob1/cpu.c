@@ -261,7 +261,9 @@ void run(CPU_p cpu) {
     // Each iteration represents one timer quantum
     //if you want to terminate at a set time:
     //cpu->computerTime < max_sys_timer
+ //   int me = 0;
     while (1) {
+   //     me++;
         cpu->computerTime++;
         cpu->isRunning->PC++;
 

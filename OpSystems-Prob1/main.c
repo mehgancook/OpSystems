@@ -15,6 +15,8 @@
 #include "cpu.h"
 #include "PCB.h"
 #include "fifo_queue.h"
+#include "PriorityQueue.h"
+#include "PriorityQueue_test.h"
 
 
 /*
@@ -23,8 +25,9 @@
  * ignored. Returns the exit status of the program.
  */
 int main(int argc, char** argv) {
-    CPU cpu;
-    run(&cpu);
+//    CPU cpu;
+//    run(&cpu);
+    testPriorityQueue();
     return (EXIT_SUCCESS);
 }
 

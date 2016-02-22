@@ -4,11 +4,11 @@
 // * and open the template in the editor.
 // */
 //
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include "PCB.h"
-//#include "fifo_queue.h"
-//#include "PriorityQueue.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "PCB.h"
+#include "fifo_queue.h"
+#include "PriorityQueue.h"
 //
 ////void dequeue1(fifo_queue *thePQ) {
 ////    int random1 = rand();
@@ -25,6 +25,21 @@
 //
 //
 //
+void testPriorityQueue() {
+    priority_queue_p queue = create_priority_queue();
+    int i;
+    for(i = 0; i < 30; i++) {
+        int random = rand();
+        int value = (random % 15) + 1;
+        PCB_p pcb = create_pcb(i, value, 0);
+        
+        enqueue_priority(queue, pcb);
+      //  enqueue_priority(queue, pcb);
+    }
+    priority_queue_to_string(queue);
+}
+
+
 //void testPriorityQueue() {
 //    fifo_queue *thePQ = createPriorityQueue();
 //    int j = 1;
