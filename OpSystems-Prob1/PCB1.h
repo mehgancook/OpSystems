@@ -16,6 +16,9 @@
  #endif
  // number of registers
  #define NUMREGS 16
+ // MT
+ // Length of Name for PCB's
+ #define LENGTH_OF_NAME 20
  
  enum state_type {new, ready, running, waiting, interrupted, halted};
  
@@ -35,6 +38,12 @@
      int TERMINATION;
      int TERMINATE;
      int TERM_COUNT;
+
+     // MT
+     // Priority boost is to determine whether or not we execute these jobs
+     int priorityBoost;
+     char name[LENGTH_OF_NAME];
+
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
      int reg_file[NUMREGS]; /* contents of GPRs */

@@ -1,6 +1,7 @@
 TimerInitTime = 300;
 num_pcbs = 6;
 currenttime = TimerInitTime;
+computerTime = 0;
 
 void initializeIOTrapArray() {
     // arrays are 4 int values and must be unique between both IO Trap Arrays 1 & 2
@@ -62,6 +63,15 @@ void run() {
 
     // main loop
     while() {
+        computerTime++;
+        // increment Pcb's pc
+        // if PC >= MAX_PC
+            // reset the Pcb's pc to 0
+            // if terminate <> 0 && term_count >= terminate
+              // store terminate time
+              // then terminate the process by removing it from is running ready queue
+              // enter termination list
+              // dequeue ready and set it to isRunning
         // running PCB's PC += 1
         if (timer() == 1) {
           pseudo_isr_timer(timer);
@@ -70,11 +80,13 @@ void run() {
         if (iointterupt1() == 1 && !is_empty(iowaitingqueue1)) {
             dequeue(iowaitingqueue1);
             // enqueue to ready queue
+            // pass to pseudo_isr
         }
 
         if (iointterupt2() == 1 && !is_empty(iowaitingqueue2)) {
             dequeue(iowaitingqueue2);
             // enqueue to ready queue
+            // pass to pseudo_isr
         }
         if (checkForIOTrap() > 0) {
             // int temp = check for IO traps

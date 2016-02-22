@@ -30,6 +30,7 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     pcb_p->TERMINATION = 0;
     pcb_p->TERMINATE = 0;
     pcb_p->TERM_COUNT = 0;
+    pcb_p->priorityBoost = 0;
     return pcb_p;
 }
 
