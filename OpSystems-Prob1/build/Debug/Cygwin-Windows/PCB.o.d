@@ -1,3 +1,3 @@
-build/Debug/Cygwin-Windows/PCB.o: PCB.c PCB.h
+build/Debug/Cygwin-Windows/PCB.o: PCB.c PCB1.h
 
-PCB.h:
+PCB1.h:

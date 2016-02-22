@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "PCB.h"
+#include "PCB1.h"
 
 #ifndef FIFO_QUEUE_H_
 #define FIFO_QUEUE_H_

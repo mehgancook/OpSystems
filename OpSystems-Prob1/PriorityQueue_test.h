@@ -15,7 +15,7 @@
 #define PRIORITYQUEUE_TEST_H
 
 #include "fifo_queue.h"
-#include "PCB.h"
+#include "PCB1.h"
 
 #ifdef __cplusplus
 extern "C" {

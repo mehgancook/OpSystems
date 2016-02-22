@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>PCB.h</itemPath>
+      <itemPath>PCB1.h</itemPath>
       <itemPath>PriorityQueue.h</itemPath>
       <itemPath>PriorityQueue_test.h</itemPath>
       <itemPath>cpu.h</itemPath>
@@ -53,7 +53,7 @@
       </compileType>
       <item path="PCB.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="PCB.h" ex="false" tool="3" flavor2="0">
+      <item path="PCB1.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PriorityQueue.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -106,7 +106,7 @@
       </compileType>
       <item path="PCB.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="PCB.h" ex="false" tool="3" flavor2="0">
+      <item path="PCB1.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PriorityQueue.c" ex="false" tool="0" flavor2="0">
       </item>
