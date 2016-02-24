@@ -55,6 +55,66 @@
  // Defines the PCB_p which is a pointer to a PCB
  typedef PCB *PCB_p;
  
+ typedef struct pcb_producer {
+          enum state_type state; /* current state  of the pcb */
+     int pid; /** id of the pid */
+     address PC; /* where to resume */
+ //    struct PCB *next_pcb; /* list ptr */
+     int Priority; /* extrinsic property */
+     address address_space; /* where in memory */
+ 
+     int MAX_PC;
+     int CREATION;
+     int TERMINATION;
+     int TERMINATE;
+     int TERM_COUNT;
+
+     // MT
+     // Priority boost is to determine whether or not we execute these jobs
+     int priorityBoost;
+     int origPriority;
+     int isCIP; // Compute Intensive Processes
+
+     char name[LENGTH_OF_NAME];
+
+     int IO_1_TRAPS[4];
+     int IO_2_TRAPS[4];
+     int reg_file[NUMREGS]; /* contents of GPRs */
+
+ } PCB_producer;
+ 
+ typedef PCB_producer *PCB_producer_p;
+ 
+ typedef struct pcb_consumer {
+          enum state_type state; /* current state  of the pcb */
+     int pid; /** id of the pid */
+     address PC; /* where to resume */
+ //    struct PCB *next_pcb; /* list ptr */
+     int Priority; /* extrinsic property */
+     address address_space; /* where in memory */
+ 
+     int MAX_PC;
+     int CREATION;
+     int TERMINATION;
+     int TERMINATE;
+     int TERM_COUNT;
+
+     // MT
+     // Priority boost is to determine whether or not we execute these jobs
+     int priorityBoost;
+     int origPriority;
+     int isCIP; // Compute Intensive Processes
+
+     char name[LENGTH_OF_NAME];
+
+     int IO_1_TRAPS[4];
+     int IO_2_TRAPS[4];
+     
+     int reg_file[NUMREGS]; /* contents of GPRs */
+     
+ } PCB_consumer;
+ 
+ typedef PCB_consumer *PCB_consumer_p;
  
  PCB_p create_pcb(int thePid, int thePriority, int theCreationTime);
  /**
