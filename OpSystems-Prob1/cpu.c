@@ -679,24 +679,19 @@ void run(CPU_p cpu) {
         if (cpu->numberOfQuantums % starvationTimer == 0) {
 //
             fifo_queue_p tempQueue = create_queue();
-            int increment = 0;
-            for (; increment < NumberOfPriorities; increment++) {
-                fifo_queue_p fifo_q = cpu->readyQueue->MainArray[i];
-                while (!isEmpty(fifo_q)) {
-//                    PCB_p pcb = dequeue(fifo_q);
-//                    if (pcb->priorityBoost) {
-//                        pcb->priorityBoost = 1;
-//                    } else {
-//                        pcb->origPriority = pcb->Priority;
-//                        pcb->Priority = pcb->Priority - 1;
-//                    }
-//                    enqueue(tempQueue, pcb);
+            while(!isEmptyPriorityQueue(cpu->readyQueue)) {
+                PCB_p pcb = dequeue(cpu->readyQueue);
+                if (pcb->priorityBoost) {
+                    pcb->priorityBoost = 1;
+                } else {
+                   pcb->origPriority = pcb->Priority;
+                   pcb->Priority = pcb->Priority - 1;
                 }
+                enqueue(tempQueue, pcb);
             }
-//
-//            while (!isEmpty(tempQueue)) {
-//                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
-//            }
+            while (!isEmpty(tempQueue)) {
+               enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+            }
         }
 
         // Determine if the currently running process needs to be terminated
