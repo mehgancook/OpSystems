@@ -24,7 +24,7 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
 //    struct PCB *next_pcb; /* list ptr */
     pcb_p->Priority = thePriority; /* extrinsic property */
     pcb_p->address_space = 0; /* where in memory */
-    pcb_p->origPriority = -1;
+    pcb_p->origPriority = thePriority;
     pcb_p->isCIP = 0;
     pcb_p->priorityBoost = 0;
 

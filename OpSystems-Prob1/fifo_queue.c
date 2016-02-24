@@ -44,6 +44,7 @@ void enqueue(fifo_queue_p queue, PCB_p pcb) {
         newNode->back = curr;
         curr->next = newNode;
     }
+//    toString(pcb);
     queue->size++;
 }
 

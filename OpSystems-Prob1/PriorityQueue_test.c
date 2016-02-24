@@ -30,11 +30,10 @@ void testPriorityQueue() {
     int i;
     for(i = 0; i < 30; i++) {
         int random = rand();
-        int value = (random % 15) + 1;
+        int value = (random % 4);
         PCB_p pcb = create_pcb(i, value, 0);
         
         enqueue_priority(queue, pcb);
-      //  enqueue_priority(queue, pcb);
     }
     priority_queue_to_string(queue);
 }

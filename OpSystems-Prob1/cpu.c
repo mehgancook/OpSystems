@@ -17,7 +17,7 @@
 //#include "cpu.h"
 //
 //#define timerInitTime 300
-//#define num_pcbs 100
+//#define num_pcbs 10
 //#define max_sys_timer 300000
 //
 //
@@ -314,9 +314,10 @@
 
 #define timerInitTime 300 // Quantum
 #define num_pcbs 100
+#define quantum 300
 #define max_sys_timer 300000
 
-#define starvationTimer 1 // TODO Change to a higher number
+#define starvationTimer 3 // TODO Change to a higher number
 
 // TODO: Decrease number of quantums to termination
 // TODO: Generate PCB's with different priorities based off %
@@ -379,7 +380,7 @@ void dequeueReadyQueue(CPU_p cpu) {
         // MT
         if (!isEmptyPriorityQueue(cpu->readyQueue)) {
         } else {
-            cpu->isRunning = cpu->idle;
+           cpu->isRunning = cpu->idle;
         }
         // MT
         enqueue_priority(cpu->readyQueue, cpu->isRunning);
@@ -435,7 +436,7 @@ void initialize(CPU_p cpu) {
             // Increment 0 count
             zeroCount += 1;
             // If we have more than 25 PCB's with 0 as a priority
-            if (zeroCount <= 25) {
+            if (zeroCount >= 25) {
                 // generate a new priority that is not 0
                 while (priority == 0) {
                     priority = generatePriority();
@@ -491,17 +492,19 @@ void dispatcher(CPU_p cpu) {
         temp->state = running;
     }
     cpu->isRunning = temp2;
+    cpu->isRunning->priorityBoost = 1;
+    toString(cpu->isRunning);
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
 
     // MT Resets priorityBoost and origPriority to defaults
     // In SWAP in the isRunning, change out the origPriority and the
     // priorityBoost flag
-    cpu->isRunning->priorityBoost = 0;
-    if (cpu->isRunning->origPriority >= 0) {
-        cpu->isRunning->Priority = cpu->isRunning->origPriority;
-    }
-    cpu->isRunning->origPriority = -1;
+   // cpu->isRunning->priorityBoost = 0;
+//    if (cpu->isRunning->origPriority >= 0) {
+//        cpu->isRunning->Priority = cpu->isRunning->origPriority;
+//    }
+//    cpu->isRunning->origPriority = -1;
 
     temp->state = ready;
     cpu->fourth_context_switching++;
@@ -557,18 +560,25 @@ int iointerrupt2(CPU_p cpu) {
  * interrupt is the timer. It then calls the dispatcher.
  */
 void scheduler(CPU_p cpu, enum interrupt interruption) {
+  //  printf("\n%d\n",cpu->newQueue->size);
     while (!isEmpty(cpu->newQueue)) {
         PCB_p pcb = dequeue(cpu->newQueue);
+//        toString(pcb);
+        //priority_queue_to_string(cpu->readyQueue);
         pcb->state = ready;
+        
         enqueue_priority(cpu->readyQueue, pcb);
+          //      priority_queue_to_string(cpu->readyQueue);
+
     }
-    if (interruption == timer) {
-        cpu->isRunning->state = ready;
-        if (cpu->isRunning != cpu->idle) {
-            PCB_p pcb = cpu->isRunning;
-            enqueue_priority(cpu->readyQueue, cpu->isRunning);
-        }
-    }
+       
+//    if (interruption == timer) {
+//        cpu->isRunning->state = ready;
+//        if (cpu->isRunning != cpu->idle) {
+//            PCB_p pcb = cpu->isRunning;
+//            enqueue_priority(cpu->readyQueue, cpu->isRunning);
+//        }
+//    }
     dispatcher(cpu);
     return;
 }
@@ -577,6 +587,7 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
 
 void pseudo_isr_timer(CPU_p cpu) {
     cpu->isRunning->state = interrupted;
+    
     scheduler(cpu, timer);
     return;
 }
@@ -624,7 +635,7 @@ void run(CPU_p cpu) {
     cpu->fourth_context_switching = 1;
 
     // MT number of current quantums
-    cpu->numberOfQuantums = 0;
+    cpu->numberOfQuantums = 1;
 
     cpu->terminateQueue = create_queue();
     cpu->ioWaitingQueue1 = create_queue();
@@ -661,12 +672,37 @@ void run(CPU_p cpu) {
     //cpu->computerTime < max_sys_timer
     //   int me = 0;
     int ijk = 0;
-    while (ijk < 100) {
+    //1504 run time is the last time this works.
+    while (ijk < 1504) {
         //     me++;
         ijk++;
-        printf("%d ", ijk);
-        cpu->numberOfQuantums++;
+      //  printf("%d ", ijk);
+        if (cpu->computerTime % quantum == 0) {
+            cpu->numberOfQuantums++;
+            fifo_queue_p tempQueue = create_queue();
+         //   priority_queue_to_string(cpu->readyQueue);
+            while(!isEmptyPriorityQueue(cpu->readyQueue)) {
+                PCB_p pcb = dequeue_priority(cpu->readyQueue);
+              //  toString(pcb);
+                if (pcb->Priority != pcb->origPriority) {
+                    pcb->Priority = pcb->origPriority;        
+                }
+                enqueue(tempQueue, pcb);
+            }
+          //  priority_queue_to_string(cpu->readyQueue);
+            printf("\n%d\n",tempQueue->size );
+            while (!isEmpty(tempQueue)) {
+                PCB_p pcb2 = tempQueue->head->pcb;
+               // toString(pcb2);
+               enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+            }
+            printf("\nQUEUE AFTER 1 QUANTA\n");
+            priority_queue_to_string(cpu->readyQueue);
+        }
+        
+      //  cpu->numberOfQuantums++;
         cpu->computerTime++;
+       // printf("%d ",cpu->computerTime);
         cpu->isRunning->PC++;
 
         // TODO: priorityBoost occurs after so many quantums
@@ -679,19 +715,29 @@ void run(CPU_p cpu) {
         if (cpu->numberOfQuantums % starvationTimer == 0) {
 //
             fifo_queue_p tempQueue = create_queue();
+            printf("QUEUE BEFORE ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
+            priority_queue_to_string(cpu->readyQueue);
             while(!isEmptyPriorityQueue(cpu->readyQueue)) {
-                PCB_p pcb = dequeue(cpu->readyQueue);
-                if (pcb->priorityBoost) {
-                    pcb->priorityBoost = 1;
-                } else {
-                   pcb->origPriority = pcb->Priority;
-                   pcb->Priority = pcb->Priority - 1;
+                PCB_p pcb = dequeue_priority(cpu->readyQueue);
+              //  toString(pcb);
+                if (!pcb->priorityBoost) {
+                    pcb->origPriority = pcb->Priority;
+                    if (pcb->Priority != 0)
+                    pcb->Priority = pcb->Priority - 1;        
                 }
+                pcb->priorityBoost = 0;
                 enqueue(tempQueue, pcb);
             }
+           // priority_queue_to_string(cpu->readyQueue);
+            printf("\n%d\n",tempQueue->size );
             while (!isEmpty(tempQueue)) {
+                PCB_p pcb2 = tempQueue->head->pcb;
+               // toString(pcb2);
                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
             }
+            printf("QUEUE AFTER ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
+            priority_queue_to_string(cpu->readyQueue);
+            cpu->numberOfQuantums = 1;
         }
 
         // Determine if the currently running process needs to be terminated
@@ -716,6 +762,30 @@ void run(CPU_p cpu) {
             iointerrupt2(cpu);
             checkForTrapArrays(cpu);
         }
+//                if (cpu->numberOfQuantums % starvationTimer == 0) {
+////
+//            fifo_queue_p tempQueue = create_queue();
+//            priority_queue_to_string(cpu->readyQueue);
+//            while(!isEmptyPriorityQueue(cpu->readyQueue)) {
+//                PCB_p pcb = dequeue_priority(cpu->readyQueue);
+//              //  toString(pcb);
+//                if (!pcb->priorityBoost) {
+//                    pcb->origPriority = pcb->Priority;
+//                    pcb->Priority = pcb->Priority - 1;        
+//                }
+//                pcb->priorityBoost = 0;
+//                enqueue(tempQueue, pcb);
+//            }
+//            priority_queue_to_string(cpu->readyQueue);
+//            printf("\n%d\n",tempQueue->size );
+//            while (!isEmpty(tempQueue)) {
+//                PCB_p pcb2 = tempQueue->head->pcb;
+//               // toString(pcb2);
+//               enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+//            }
+//            priority_queue_to_string(cpu->readyQueue);
+//            cpu->numberOfQuantums = 1;
+//        }
     }
     fclose(cpu->outfile);
 }

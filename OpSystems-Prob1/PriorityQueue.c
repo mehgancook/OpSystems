@@ -17,7 +17,7 @@
 
 priority_queue_p create_priority_queue() {
     int i;
-    priority_queue_p pq  = malloc(sizeof(fifo_queue_p) * 16);
+    priority_queue_p pq  = malloc(sizeof(fifo_queue_p) * NumberOfPriorities);
     for (i = 0; i < NumberOfPriorities; i++) {
         pq->MainArray[i] = create_queue();    
     }
@@ -58,7 +58,7 @@ priority_queue_p create_priority_queue() {
 void enqueue_priority(priority_queue_p queue, PCB_p block) {
     int answer = 0;
     
-    if (block->Priority > 0 && block->Priority < NumberOfPriorities) {
+    if (block->Priority >= 0 && block->Priority < NumberOfPriorities) {
       //  printf("%d ", block->Priority);
       //    to_string_enqueue(queue->MainArray[block->Priority]);
         enqueue(queue->MainArray[block->Priority], block);

@@ -27,7 +27,7 @@
 int main(int argc, char** argv) {
     CPU cpu;
     run(&cpu);
- //   testPriorityQueue();
+  // testPriorityQueue();
     return (EXIT_SUCCESS);
 }
 
