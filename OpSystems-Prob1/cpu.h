@@ -109,6 +109,7 @@ typedef struct cpu {
 
     // MT
     int numberOfQuantums;
+    int randomGeneratingPcbNumber;
 
     FILE *outfile;
     int fourth_context_switching;

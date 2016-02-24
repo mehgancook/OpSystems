@@ -337,7 +337,6 @@ int generateRandomNumber(int lowest, int highest) {
 
 // MT
 // Generate priority for PCB's
-
 int generatePriority() {
     int n = generateRandomNumber(1, 100);
     int priority;
@@ -353,8 +352,12 @@ int generatePriority() {
     return priority;
 }
 
-// Transfer the next PCB from the ready queue to currently running
+PCB_p generatePCB(CPU_p cpu) {
+    enqueue(cpu->newQueue, create_pcb(cpu->pidCounter++, generatePriority(), 0));
+    cpu->randomGeneratingPcbNumber += generateRandomNumber(3000) + cpu->computerTime;
+}
 
+// Transfer the next PCB from the ready queue to currently running
 void ReadyQueueToIsRunning(CPU_p cpu) {
     if (!isEmptyPriorityQueue(cpu->readyQueue)) {
         // MT
@@ -640,6 +643,7 @@ void run(CPU_p cpu) {
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
     cpu->fourth_context_switching = 1;
+    cpu->randomGeneratingPcbNumber = generateRandomNumber(3000);
 
     // MT number of current quantums
     cpu->numberOfQuantums = 1;
@@ -683,6 +687,10 @@ void run(CPU_p cpu) {
     while (1) {
         //     me++;
         ijk++;
+
+        if (cpu->randomGeneratingPcbNumber == ijk) {
+            generatePCB(cpu);
+        }
       //  printf("%d ", ijk);
         if (cpu->computerTime % quantum == 0) {
             cpu->numberOfQuantums++;
