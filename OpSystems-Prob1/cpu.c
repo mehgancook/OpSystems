@@ -313,7 +313,7 @@
 #include "cpu.h"
 
 #define timerInitTime 300 // Quantum
-#define num_pcbs 100
+#define num_pcbs 5
 #define quantum 300
 #define max_sys_timer 300000
 
