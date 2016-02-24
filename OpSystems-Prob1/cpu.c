@@ -327,6 +327,7 @@
 
 // MT
 // Generates a random number
+
 int generateRandomNumber(int lowest, int highest) {
     int i = rand();
     i = (i % (highest - lowest)) + lowest;
@@ -335,6 +336,7 @@ int generateRandomNumber(int lowest, int highest) {
 
 // MT
 // Generate priority for PCB's
+
 int generatePriority() {
     int n = generateRandomNumber(1, 100);
     int priority;
@@ -346,18 +348,19 @@ int generatePriority() {
         priority = 2;
     } else {
         priority = 1;
-    }    
+    }
     return priority;
 }
 
 // Transfer the next PCB from the ready queue to currently running
+
 void ReadyQueueToIsRunning(CPU_p cpu) {
     if (!isEmptyPriorityQueue(cpu->readyQueue)) {
         // MT
         PCB_p pcb = dequeue_priority(cpu->readyQueue);
         fprintf(cpu->outfile, "PID %d put into waiting queue, PID %d dispatched\n", cpu->isRunning->pid,
-            // MT
-            pcb->pid);
+                // MT
+                pcb->pid);
 
         // MT
         cpu->isRunning = pcb;
@@ -368,6 +371,7 @@ void ReadyQueueToIsRunning(CPU_p cpu) {
 
 // Transfers currently running process to the ready queue so long as the 
 // currently running process is not the idle process.
+
 void dequeueReadyQueue(CPU_p cpu) {
     cpu->isRunning->state = ready;
     if (cpu->isRunning != cpu->idle) {
@@ -383,6 +387,7 @@ void dequeueReadyQueue(CPU_p cpu) {
 }
 
 // Initializes both I/O trap arrays for the passed PCB.
+
 void initialize_IO_trap_array(PCB_p pcb) {
     int io[8] = {0};
     int i, random;
@@ -406,12 +411,13 @@ void initialize_IO_trap_array(PCB_p pcb) {
         if (i < 4) {
             pcb->IO_1_TRAPS[i] = random;
         } else {
-            pcb->IO_2_TRAPS[i - 4] = random; 
+            pcb->IO_2_TRAPS[i - 4] = random;
         }
-    } 
+    }
 }
 
 // Initialize a random number of PCB's and places them into the new Queue.
+
 void initialize(CPU_p cpu) {
     time_t t;
     srand((unsigned) time(&t));
@@ -419,7 +425,7 @@ void initialize(CPU_p cpu) {
     i = (i % 5) + 1;
     // MT
     int zeroCount = 0;
-   // for (;i > 0 && pidCounter < num_pcbs; i--) {
+    // for (;i > 0 && pidCounter < num_pcbs; i--) {
     while (cpu->pidCounter < num_pcbs) {
         // MT
         // Generate intial priority
@@ -447,7 +453,7 @@ void initialize(CPU_p cpu) {
             pcb->isCIP = 1;
         }
 
-        fprintf(cpu->outfile,"Process created: PID %d at %d\n", pcb->pid, cpu->computerTime);
+        fprintf(cpu->outfile, "Process created: PID %d at %d\n", pcb->pid, cpu->computerTime);
         // assign MAX_PC with a random number between 2000 - 4000
         pcb->MAX_PC = (rand() % 2001) + 2000;
         // assign Terminate value with a random number between 0 - 30
@@ -455,7 +461,7 @@ void initialize(CPU_p cpu) {
         // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
         initialize_IO_trap_array(pcb);
         enqueue(cpu->newQueue, pcb);
-    }  
+    }
 }
 
 /*
@@ -464,7 +470,7 @@ void initialize(CPU_p cpu) {
  */
 void dispatcher(CPU_p cpu) {
     int bool = 0;
-    
+
     if (cpu->isRunning != cpu->idle && cpu->fourth_context_switching % 4 == 0) {
         bool = 1;
     } else {
@@ -481,7 +487,7 @@ void dispatcher(CPU_p cpu) {
         temp2 = dequeue_priority(cpu->readyQueue);
     }
     if (bool) {
-        fprintf(cpu->outfile,"Timer interrupt: PID %d was running, PID %d dispatched\n", temp->pid, temp2->pid);
+        fprintf(cpu->outfile, "Timer interrupt: PID %d was running, PID %d dispatched\n", temp->pid, temp2->pid);
         temp->state = running;
     }
     cpu->isRunning = temp2;
@@ -504,10 +510,11 @@ void dispatcher(CPU_p cpu) {
 
 // Simulates a timer interrupt. Returns 1 if a timer interrupt has occurred,
 // 0 otherwise.
+
 int timerInterrupt(CPU_p cpu) {
     cpu->currentTimerTime--;
     if (cpu->currentTimerTime <= 0) {
-        cpu->currentTimerTime = timerInitTime; 
+        cpu->currentTimerTime = timerInitTime;
         return 1;
     } else {
         return 0;
@@ -516,13 +523,14 @@ int timerInterrupt(CPU_p cpu) {
 
 // Simulates I/O being processed. Returns 1 if I/O interrupt has occurred, 0
 // otherwise.
+
 int iointerrupt1(CPU_p cpu) {
     cpu->ioTimerTime1--;
     if (cpu->ioTimerTime1 <= 0 &&
-        // MT
-        !isEmptyPriorityQueue(cpu->ioWaitingQueue1)) {
+            // MT
+            !isEmptyPriorityQueue(cpu->ioWaitingQueue1)) {
         cpu->ioTimerTime1 = cpu->initialioTimerTime1;
-        fprintf(cpu->outfile,"I/O completion interrupt1: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue1->head->pcb->pid);
+        fprintf(cpu->outfile, "I/O completion interrupt1: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue1->head->pcb->pid);
         // MT
         enqueue_priority(cpu->readyQueue, dequeue(cpu->ioWaitingQueue1));
         return 1;
@@ -535,7 +543,7 @@ int iointerrupt2(CPU_p cpu) {
     cpu->ioTimerTime2--;
     if (cpu->ioTimerTime2 <= 0 && !isEmpty(cpu->ioWaitingQueue2)) {
         cpu->ioTimerTime2 = cpu->initialioTimerTime2;
-        fprintf(cpu->outfile,"I/O completion interrupt2: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue2->head->pcb->pid);
+        fprintf(cpu->outfile, "I/O completion interrupt2: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue2->head->pcb->pid);
         enqueue_priority(cpu->readyQueue, dequeue(cpu->ioWaitingQueue2));
         return 1;
     } else {
@@ -566,6 +574,7 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
 }
 
 // Simulates an isr timer and calls the scheduler.
+
 void pseudo_isr_timer(CPU_p cpu) {
     cpu->isRunning->state = interrupted;
     scheduler(cpu, timer);
@@ -573,38 +582,41 @@ void pseudo_isr_timer(CPU_p cpu) {
 }
 
 // Transfers currently running PCB to respective I/O waiting queue
+
 void trapHandler(CPU_p cpu, int io) {
     if (io == 1) {
-        fprintf(cpu->outfile,"I/O trap request: I/O device 1,");
-        enqueue(cpu->ioWaitingQueue1 ,cpu->isRunning);
+        fprintf(cpu->outfile, "I/O trap request: I/O device 1,");
+        enqueue(cpu->ioWaitingQueue1, cpu->isRunning);
         ReadyQueueToIsRunning(cpu);
     } else if (io == 2) {
-        fprintf(cpu->outfile,"I/O trap request: I/O device 2,");
-        enqueue(cpu->ioWaitingQueue2 ,cpu->isRunning);
+        fprintf(cpu->outfile, "I/O trap request: I/O device 2,");
+        enqueue(cpu->ioWaitingQueue2, cpu->isRunning);
         ReadyQueueToIsRunning(cpu);
     }
 }
 
 // Checks if an I/O interrupt has occurred 
+
 void checkForTrapArrays(CPU_p cpu) {
     int i = 0;
-   // if (!cpu->isRunning->isCIP) {
-        for (; i < 4; i++) {
-            if(cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
-                trapHandler(cpu, 1);
-                break;
-            } else if(cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC){
-                trapHandler(cpu, 2);
-                break;
-            }
+    // if (!cpu->isRunning->isCIP) {
+    for (; i < 4; i++) {
+        if (cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
+            trapHandler(cpu, 1);
+            break;
+        } else if (cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC) {
+            trapHandler(cpu, 2);
+            break;
         }
-  //  }
+    }
+    //  }
 }
+
 /*
  * Runs the program and simulates the CPU 
  */
 void run(CPU_p cpu) {
-    cpu->pidCounter= 0;
+    cpu->pidCounter = 0;
     cpu->computerTime = 0;
     cpu->currentTimerTime = timerInitTime;
     cpu->systack_pc = 0;
@@ -621,7 +633,7 @@ void run(CPU_p cpu) {
     cpu->ioTimerTime2 = ((rand() % 3) + 3) * timerInitTime;
     cpu->initialioTimerTime1 = cpu->ioTimerTime1;
     cpu->initialioTimerTime2 = cpu->ioTimerTime2;
-    
+
     cpu->outfile = fopen("discontinuities.txt", "w");
     fprintf(cpu->outfile, "GROUP 9:\nTony Zullo\nJonah Howard\nQuinn Cox\nMehgan Cook\n\n\n");
 
@@ -633,23 +645,26 @@ void run(CPU_p cpu) {
         cpu->idle->IO_1_TRAPS[i] = -1;
         cpu->idle->IO_2_TRAPS[i] = -1;
     }
-    
+
     cpu->newQueue = create_queue();
     cpu->readyQueue = create_priority_queue();
-    
+
     if (isEmptyPriorityQueue(cpu->readyQueue)) {
         cpu->isRunning = cpu->idle;
     }
-    
+
     initialize(cpu);
     int bool = 1;
     cpu->pidCounter = 1;
     // Each iteration represents one timer quantum
     //if you want to terminate at a set time:
     //cpu->computerTime < max_sys_timer
- //   int me = 0;
-    while (1) {
-   //     me++;
+    //   int me = 0;
+    int ijk = 0;
+    while (ijk < 100) {
+        //     me++;
+        ijk++;
+        printf("%d ", ijk);
         cpu->numberOfQuantums++;
         cpu->computerTime++;
         cpu->isRunning->PC++;
@@ -661,37 +676,37 @@ void run(CPU_p cpu) {
         // and change priority of PCB to priority - 1
         // Enqueue and Dequeue to transfer PCB's into new Ready Queues
         // MT
-        if (starvationTimer % cpu->numberOfQuantums == 0) {
-
+        if (cpu->numberOfQuantums % starvationTimer == 0) {
+//
             fifo_queue_p tempQueue = create_queue();
             int increment = 0;
             for (; increment < NumberOfPriorities; increment++) {
                 fifo_queue_p fifo_q = cpu->readyQueue->MainArray[i];
                 while (!isEmpty(fifo_q)) {
-                    PCB_p pcb = dequeue(fifo_q);
-                    if (pcb->priorityBoost) {
-                        pcb->priorityBoost = 1;
-                    } else {
-                        pcb->origPriority = pcb->Priority;
-                        pcb->Priority = pcb->Priority - 1;
-                    }
-                    enqueue(tempQueue, pcb);
+//                    PCB_p pcb = dequeue(fifo_q);
+//                    if (pcb->priorityBoost) {
+//                        pcb->priorityBoost = 1;
+//                    } else {
+//                        pcb->origPriority = pcb->Priority;
+//                        pcb->Priority = pcb->Priority - 1;
+//                    }
+//                    enqueue(tempQueue, pcb);
                 }
             }
-
-            while (!isEmpty(tempQueue)){
-                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
-            }
+//
+//            while (!isEmpty(tempQueue)) {
+//                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+//            }
         }
 
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
             cpu->isRunning->PC = 0;
             cpu->isRunning->TERM_COUNT++;
-            if (cpu->isRunning->TERMINATE != 0  && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
-                printf("Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime);
+            if (cpu->isRunning->TERMINATE != 0 && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
+                printf("Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
                 cpu->isRunning->TERMINATION = cpu->computerTime;
-                fprintf(cpu->outfile,"Process terminated: PID %d at %d\n",cpu->isRunning->pid, cpu->computerTime); 
+                fprintf(cpu->outfile, "Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
                 enqueue(cpu->terminateQueue, cpu->isRunning);
                 ReadyQueueToIsRunning(cpu);
                 cpu->currentTimerTime = timerInitTime;
@@ -703,7 +718,7 @@ void run(CPU_p cpu) {
         } else {
             // Check for IO interrupts
             iointerrupt1(cpu);
-            iointerrupt2(cpu);        
+            iointerrupt2(cpu);
             checkForTrapArrays(cpu);
         }
     }
