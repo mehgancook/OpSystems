@@ -83,7 +83,7 @@ PCB_p dequeue_priority(priority_queue_p queue) {
     return answerPCB;
 }
 
-int isEmptyReadyQueue(priority_queue_p queue) {
+int isEmptyPriorityQueue(priority_queue_p queue) {
     int i = 0;
     int flag = 1;
     while (i < NumberOfPriorities) {
