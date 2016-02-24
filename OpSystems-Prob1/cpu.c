@@ -458,7 +458,8 @@ void initialize(CPU_p cpu) {
         // assign MAX_PC with a random number between 2000 - 4000
         pcb->MAX_PC = (rand() % 2001) + 2000;
         // assign Terminate value with a random number between 0 - 30
-        pcb->TERMINATE = (rand() % 31);
+        pcb->TERMINATE = (rand() % 2);
+        
         // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
         initialize_IO_trap_array(pcb);
         enqueue(cpu->newQueue, pcb);
@@ -748,7 +749,8 @@ void run(CPU_p cpu) {
 
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
-            cpu->isRunning->PC = 0;                printf("Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
+            cpu->isRunning->PC = 0;                
+           // printf("Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
 
             cpu->isRunning->TERM_COUNT++;
             if (cpu->isRunning->TERMINATE != 0 && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
