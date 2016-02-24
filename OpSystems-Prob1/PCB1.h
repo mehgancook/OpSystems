@@ -76,14 +76,16 @@
      int isCIP; // Compute Intensive Processes
 
      char name[LENGTH_OF_NAME];
-
+     
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
+     int mutex_lock[2];
+     
      int reg_file[NUMREGS]; /* contents of GPRs */
 
- } PCB_producer;
+ } PCB_producer, producer;
  
- typedef PCB_producer *PCB_producer_p;
+ typedef PCB_producer *PCB_p_producer;
  
  typedef struct pcb_consumer {
           enum state_type state; /* current state  of the pcb */
@@ -109,14 +111,18 @@
 
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
-     
+     int mutex_lock[2];
      int reg_file[NUMREGS]; /* contents of GPRs */
      
- } PCB_consumer;
+ } PCB_consumer, consumer;
  
- typedef PCB_consumer *PCB_consumer_p;
+ typedef PCB_consumer *PCB_p_consumer;
  
  PCB_p create_pcb(int thePid, int thePriority, int theCreationTime);
+ 
+ PCB_p_producer create_producer(int thePid, int thePriority, int theCreationTime);
+ 
+ PCB_p_consumer create_consumer(int thePid, int thePriority, int theCreationTime);
  /**
   * Takes a PCB pointer and prints out the contents of the PCB
   * @param PCB_p pointer referencing the PCB to print

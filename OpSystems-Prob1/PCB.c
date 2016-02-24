@@ -36,6 +36,46 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     return pcb_p;
 }
 
+PCB_p_consumer create_consumer(int thePid, int thePriority, int theCreationTime) {
+    PCB_p_consumer pcb_p_consumer = malloc(sizeof(PCB));
+    pcb_p_consumer->state = new; /* current state  of the pcb */
+    pcb_p_consumer->pid = thePid; /** id of the pid */
+    pcb_p_consumer->PC = 0; /* where to resume */
+    //struct PCB *next_pcb; /* list ptr */
+    pcb_p_consumer->Priority = thePriority; /* extrinsic property */
+    pcb_p_consumer->address_space = 0; /* where in memory */
+    pcb_p_consumer->origPriority = thePriority;
+    pcb_p_consumer->isCIP = 0;
+    pcb_p_consumer->priorityBoost = 0;
+
+    pcb_p_consumer->MAX_PC = 2345;
+    pcb_p_consumer->CREATION = theCreationTime;
+    pcb_p_consumer->TERMINATION = 0;
+    pcb_p_consumer->TERMINATE = 0;
+    pcb_p_consumer->TERM_COUNT = 0;
+    return pcb_p_consumer; 
+}
+
+PCB_p_producer create_producer(int thePid, int thePriority, int theCreationTime) {
+    PCB_p_producer pcb_p_producer = malloc(sizeof(PCB));
+    pcb_p_producer->state = new; /* current state  of the pcb */
+    pcb_p_producer->pid = thePid; /** id of the pid */
+    pcb_p_producer->PC = 0; /* where to resume */
+    //struct PCB *next_pcb; /* list ptr */
+    pcb_p_producer->Priority = thePriority; /* extrinsic property */
+    pcb_p_producer->address_space = 0; /* where in memory */
+    pcb_p_producer->origPriority = thePriority;
+    pcb_p_producer->isCIP = 0;
+    pcb_p_producer->priorityBoost = 0;
+
+    pcb_p_producer->MAX_PC = 2345;
+    pcb_p_producer->CREATION = theCreationTime;
+    pcb_p_producer->TERMINATION = 0;
+    pcb_p_producer->TERMINATE = 0;
+    pcb_p_producer->TERM_COUNT = 0;
+    return pcb_p_producer; 
+}
+
 /**
  * Gets the state name and returns the state name in a String.
  * @param enum state_type representing the current state
