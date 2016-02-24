@@ -491,6 +491,7 @@ void dispatcher(CPU_p cpu) {
         fprintf(cpu->outfile, "Timer interrupt: PID %d was running, PID %d dispatched\n", temp->pid, temp2->pid);
         temp->state = running;
     }
+   // printf("%d ", cpu->readyQueue->size);
     cpu->isRunning = temp2;
     cpu->isRunning->priorityBoost = 1;
  //   toString(cpu->isRunning);
@@ -576,13 +577,13 @@ void scheduler(CPU_p cpu, enum interrupt interruption) {
 
     }
        
-//    if (interruption == timer) {
-//        cpu->isRunning->state = ready;
-//        if (cpu->isRunning != cpu->idle) {
-//            PCB_p pcb = cpu->isRunning;
-//            enqueue_priority(cpu->readyQueue, cpu->isRunning);
-//        }
-//    }
+    if (interruption == timer) {
+        cpu->isRunning->state = ready;
+        if (cpu->isRunning != cpu->idle) {
+            PCB_p pcb = cpu->isRunning;
+            enqueue_priority(cpu->readyQueue, cpu->isRunning);
+        }
+    }
     dispatcher(cpu);
     return;
 }
