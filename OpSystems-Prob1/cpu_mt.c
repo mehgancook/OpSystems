@@ -17,10 +17,48 @@
 #include "PriorityQueue.h"
 #include "cpu.h"
 
-#define timerInitTime 300
+#define timerInitTime 300 // Quantum
 #define num_pcbs 100
 #define max_sys_timer 300000
 
+#define starvationTimer 1 // TODO Change to a higher number
+
+// TODO: Decrease number of quantums to termination
+// TODO: Generate PCB's with different priorities based off %
+
+// TODO: Generate PCB's every once in a while
+// TODO: Keep running 
+
+
+// MT
+// Generates a random number
+int generateRandomNumber(int lowest, int highest) {
+    int i = rand();
+    i = (i % (highest - lowest)) + lowest;
+    return i;
+}
+
+// MT
+// Generate priority for PCB's
+int generatePriority() {
+    int n = generateRandomNumber(1, 100);
+    int priority;
+    switch(n) {
+        case 6 < n:
+            priority = 0;
+            break;
+        case 11 < n:
+            priority = 3;
+            break;
+        case 21 < n:
+            priority = 2;
+            break;
+        default:
+            priority = 1;
+            break;
+    }
+    return priority;
+}
 
 // Transfer the next PCB from the ready queue to currently running
 void ReadyQueueToIsRunning(CPU_p cpu) {
@@ -89,9 +127,36 @@ void initialize(CPU_p cpu) {
     srand((unsigned) time(&t));
     int i = rand();
     i = (i % 5) + 1;
+    // MT
+    int zeroCount = 0;
    // for (;i > 0 && pidCounter < num_pcbs; i--) {
     while (cpu->pidCounter < num_pcbs) {
-        PCB_p pcb = create_pcb(cpu->pidCounter++, 0, 0);
+        // MT
+        // Generate intial priority
+        int priority = generatePriority();
+        // If priority is 0
+        if (priority == 0) {
+            // Increment 0 count
+            zeroCount += 1;
+            // If we have more than 25 PCB's with 0 as a priority
+            if (zeroCount <= 25) {
+                // generate a new priority that is not 0
+                while (priority == 0) {
+                    priority = generatePriority();
+                }
+            }
+        }
+
+        // MT
+        cpu->priorityCount[priority] += 1;
+        PCB_p pcb = create_pcb(cpu->pidCounter++, priority, 0);
+        // MT
+        // If priority was set to 0
+        if (priority == 0) {
+            // Set isCIP to 1
+            pcb->isCIP = 1;
+        }
+
         fprintf(cpu->outfile,"Process created: PID %d at %d\n", pcb->pid, cpu->computerTime);
         // assign MAX_PC with a random number between 2000 - 4000
         pcb->MAX_PC = (rand() % 2001) + 2000;
@@ -132,6 +197,16 @@ void dispatcher(CPU_p cpu) {
     cpu->isRunning = temp2;
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
+
+    // MT Resets priorityBoost and origPriority to defaults
+    // In SWAP in the isRunning, change out the origPriority and the
+    // priorityBoost flag
+    cpu->isRunning->priorityBoost = 0;
+    if (cpu->isRunning->origPriority >= 0) {
+        cpu->isRunning->Priority = cpu->isRunning->origPriority;
+    }
+    cpu->isRunning->origPriority = -1;
+
     temp->state = ready;
     cpu->fourth_context_switching++;
     return;
@@ -223,13 +298,15 @@ void trapHandler(CPU_p cpu, int io) {
 // Checks if an I/O interrupt has occurred 
 void checkForTrapArrays(CPU_p cpu) {
     int i = 0;
-    for (; i < 4; i++) {
-        if(cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
-            trapHandler(cpu, 1);
-            break;
-        } else if(cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC){
-            trapHandler(cpu, 2);
-            break;
+    if (!cpu->isRunning->isCIP) {
+        for (; i < 4; i++) {
+            if(cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
+                trapHandler(cpu, 1);
+                break;
+            } else if(cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC){
+                trapHandler(cpu, 2);
+                break;
+            }
         }
     }
 }
@@ -243,6 +320,10 @@ void run(CPU_p cpu) {
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
     cpu->fourth_context_switching = 1;
+
+    // MT number of current quantums
+    cpu->numberOfQuantums = 0;
+
     cpu->terminateQueue = create_queue();
     cpu->ioWaitingQueue1 = create_queue();
     cpu->ioWaitingQueue2 = create_queue();
@@ -279,8 +360,39 @@ void run(CPU_p cpu) {
  //   int me = 0;
     while (1) {
    //     me++;
+        cpu->numberOfQuantums++;
         cpu->computerTime++;
         cpu->isRunning->PC++;
+
+        // TODO: priorityBoost occurs after so many quantums
+        // TODO: For loop in queue after every # of quantums,
+        // we bump up all PCB's with priorityBoost false to true
+        // and change priority of PCB to origPriority
+        // and change priority of PCB to priority - 1
+        // Enqueue and Dequeue to transfer PCB's into new Ready Queues
+        // MT
+        if (starvationTimer % cpu->numberOfQuantums == 0) {
+
+            fifo_queue_p tempQueue = create_queue();
+            int increment = 0;
+            for (; increment < NumberOfPriorities; increment++) {
+                fifo_queue_p fifo_queue = cpu->readyQueue[i];
+                while (!isEmpty(fifo_queue)) {
+                    PCB_p pcb = dequeue(cpu->fifo_queue);
+                    if (pcb->priorityBoost) {
+                        pcb->priorityBoost = 1;
+                    } else {
+                        pcb->origPriority = pcb->Priority;
+                        pcb->Priority = pcb->Priority - 1;
+                    }
+                    enqueue(tempQueue, pcb);
+                }
+            }
+
+            while (!isEmpty(tempQueue)){
+                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+            }
+        }
 
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {

@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define NumberOfPriorities 16    
+#define NumberOfPriorities 4    
     
 typedef struct priority_queue {
         fifo_queue_p MainArray[NumberOfPriorities];

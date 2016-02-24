@@ -33,7 +33,7 @@ typedef struct cpu {
     fifo_queue_p newQueue;
 
     // MT
-    priority_queue_p readyQueue;
+    int numberOfQuantums;
 
     FILE *outfile;
     int fourth_context_switching;
@@ -47,6 +47,10 @@ typedef struct cpu {
     fifo_queue_p terminateQueue;
     fifo_queue_p ioWaitingQueue1;
     fifo_queue_p ioWaitingQueue2;
+
+    // MT
+    priority_queue_p readyQueue;
+    int priorityCount[NumberOfPriorities];
 } CPU;
 
 typedef CPU *CPU_p;

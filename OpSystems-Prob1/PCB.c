@@ -24,13 +24,15 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
 //    struct PCB *next_pcb; /* list ptr */
     pcb_p->Priority = thePriority; /* extrinsic property */
     pcb_p->address_space = 0; /* where in memory */
+    pcb_p->origPriority = -1;
+    pcb_p->isCIP = 0;
+    pcb_p->priorityBoost = 0;
 
     pcb_p->MAX_PC = 2345;
     pcb_p->CREATION = theCreationTime;
     pcb_p->TERMINATION = 0;
     pcb_p->TERMINATE = 0;
     pcb_p->TERM_COUNT = 0;
-    pcb_p->priorityBoost = 0;
     return pcb_p;
 }
 

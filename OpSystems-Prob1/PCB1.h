@@ -42,6 +42,9 @@
      // MT
      // Priority boost is to determine whether or not we execute these jobs
      int priorityBoost;
+     int origPriority;
+     int isCIP; // Compute Intensive Processes
+
      char name[LENGTH_OF_NAME];
 
      int IO_1_TRAPS[4];
