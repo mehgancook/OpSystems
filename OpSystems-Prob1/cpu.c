@@ -313,7 +313,7 @@
 #include "cpu.h"
 
 #define timerInitTime 300 // Quantum
-#define num_pcbs 5
+#define num_pcbs 100
 #define quantum 300
 #define max_sys_timer 300000
 
@@ -458,7 +458,7 @@ void initialize(CPU_p cpu) {
         // assign MAX_PC with a random number between 2000 - 4000
         pcb->MAX_PC = (rand() % 2001) + 2000;
         // assign Terminate value with a random number between 0 - 30
-        pcb->TERMINATE = (rand() % 2);
+        pcb->TERMINATE = (rand() % 31);
         
         // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
         initialize_IO_trap_array(pcb);
@@ -617,7 +617,7 @@ void trapHandler(CPU_p cpu, int io) {
 
 void checkForTrapArrays(CPU_p cpu) {
     int i = 0;
-    // if (!cpu->isRunning->isCIP) {
+     if (!cpu->isRunning->isCIP) {
     for (; i < 4; i++) {
         if (cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
             trapHandler(cpu, 1);
@@ -626,7 +626,7 @@ void checkForTrapArrays(CPU_p cpu) {
             trapHandler(cpu, 2);
             break;
         }
-    //}
+    }
       }
 }
 
