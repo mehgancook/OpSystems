@@ -493,7 +493,7 @@ void dispatcher(CPU_p cpu) {
     }
     cpu->isRunning = temp2;
     cpu->isRunning->priorityBoost = 1;
-    toString(cpu->isRunning);
+ //   toString(cpu->isRunning);
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
 
@@ -531,9 +531,11 @@ int iointerrupt1(CPU_p cpu) {
     cpu->ioTimerTime1--;
     if (cpu->ioTimerTime1 <= 0 &&
             // MT
-            !isEmptyPriorityQueue(cpu->ioWaitingQueue1)) {
+            !isEmpty(cpu->ioWaitingQueue1)) {
         cpu->ioTimerTime1 = cpu->initialioTimerTime1;
         fprintf(cpu->outfile, "I/O completion interrupt1: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue1->head->pcb->pid);
+        // MT
+   //      printf("I/O completion interrupt1: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue1->head->pcb->pid);
         // MT
         enqueue_priority(cpu->readyQueue, dequeue(cpu->ioWaitingQueue1));
         return 1;
@@ -547,6 +549,8 @@ int iointerrupt2(CPU_p cpu) {
     if (cpu->ioTimerTime2 <= 0 && !isEmpty(cpu->ioWaitingQueue2)) {
         cpu->ioTimerTime2 = cpu->initialioTimerTime2;
         fprintf(cpu->outfile, "I/O completion interrupt2: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue2->head->pcb->pid);
+     //    printf("I/O completion interrupt2: PID %d is running, PID %d put in ready queue\n", cpu->isRunning->pid, cpu->ioWaitingQueue2->head->pcb->pid);
+        // MT
         enqueue_priority(cpu->readyQueue, dequeue(cpu->ioWaitingQueue2));
         return 1;
     } else {
@@ -598,12 +602,13 @@ void trapHandler(CPU_p cpu, int io) {
     if (io == 1) {
         fprintf(cpu->outfile, "I/O trap request: I/O device 1,");
         enqueue(cpu->ioWaitingQueue1, cpu->isRunning);
-        ReadyQueueToIsRunning(cpu);
+     //   ReadyQueueToIsRunning(cpu);
     } else if (io == 2) {
         fprintf(cpu->outfile, "I/O trap request: I/O device 2,");
         enqueue(cpu->ioWaitingQueue2, cpu->isRunning);
-        ReadyQueueToIsRunning(cpu);
+     //   ReadyQueueToIsRunning(cpu);
     }
+    ReadyQueueToIsRunning(cpu);
 }
 
 // Checks if an I/O interrupt has occurred 
@@ -619,8 +624,8 @@ void checkForTrapArrays(CPU_p cpu) {
             trapHandler(cpu, 2);
             break;
         }
-    }
-    //  }
+    //}
+      }
 }
 
 /*
@@ -673,7 +678,7 @@ void run(CPU_p cpu) {
     //   int me = 0;
     int ijk = 0;
     //1504 run time is the last time this works.
-    while (ijk < 1504) {
+    while (1) {
         //     me++;
         ijk++;
       //  printf("%d ", ijk);
@@ -690,14 +695,14 @@ void run(CPU_p cpu) {
                 enqueue(tempQueue, pcb);
             }
           //  priority_queue_to_string(cpu->readyQueue);
-            printf("\n%d\n",tempQueue->size );
+           // printf("\n%d\n",tempQueue->size );
             while (!isEmpty(tempQueue)) {
                 PCB_p pcb2 = tempQueue->head->pcb;
                // toString(pcb2);
                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
             }
-            printf("\nQUEUE AFTER 1 QUANTA\n");
-            priority_queue_to_string(cpu->readyQueue);
+        //    printf("\nQUEUE AFTER 1 QUANTA\n");
+        //    priority_queue_to_string(cpu->readyQueue);
         }
         
       //  cpu->numberOfQuantums++;
@@ -715,8 +720,8 @@ void run(CPU_p cpu) {
         if (cpu->numberOfQuantums % starvationTimer == 0) {
 //
             fifo_queue_p tempQueue = create_queue();
-            printf("QUEUE BEFORE ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
-            priority_queue_to_string(cpu->readyQueue);
+           // printf("QUEUE BEFORE ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
+           // priority_queue_to_string(cpu->readyQueue);
             while(!isEmptyPriorityQueue(cpu->readyQueue)) {
                 PCB_p pcb = dequeue_priority(cpu->readyQueue);
               //  toString(pcb);
@@ -729,20 +734,21 @@ void run(CPU_p cpu) {
                 enqueue(tempQueue, pcb);
             }
            // priority_queue_to_string(cpu->readyQueue);
-            printf("\n%d\n",tempQueue->size );
+        //    printf("\n%d\n",tempQueue->size );
             while (!isEmpty(tempQueue)) {
                 PCB_p pcb2 = tempQueue->head->pcb;
                // toString(pcb2);
                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
             }
-            printf("QUEUE AFTER ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
-            priority_queue_to_string(cpu->readyQueue);
+          //  printf("QUEUE AFTER ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
+          //  priority_queue_to_string(cpu->readyQueue);
             cpu->numberOfQuantums = 1;
         }
 
         // Determine if the currently running process needs to be terminated
         if (cpu->isRunning->PC >= cpu->isRunning->MAX_PC) {
-            cpu->isRunning->PC = 0;
+            cpu->isRunning->PC = 0;                printf("Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
+
             cpu->isRunning->TERM_COUNT++;
             if (cpu->isRunning->TERMINATE != 0 && cpu->isRunning->TERM_COUNT >= cpu->isRunning->TERMINATE) {
                 printf("Process terminated: PID %d at %d\n", cpu->isRunning->pid, cpu->computerTime);
