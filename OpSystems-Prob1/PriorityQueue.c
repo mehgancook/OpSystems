@@ -21,6 +21,7 @@ priority_queue_p create_priority_queue() {
     for (i = 0; i < NumberOfPriorities; i++) {
         pq->MainArray[i] = create_queue();    
     }
+    pq->size = 0;
     return pq;
 }
 
@@ -62,6 +63,7 @@ void enqueue_priority(priority_queue_p queue, PCB_p block) {
       //  printf("%d ", block->Priority);
       //    to_string_enqueue(queue->MainArray[block->Priority]);
         enqueue(queue->MainArray[block->Priority], block);
+        queue->size += 1;
     }
 }
 
@@ -80,6 +82,7 @@ PCB_p dequeue_priority(priority_queue_p queue) {
     if (keepGoing) {
         printf("priority Queue is Empty!");
     }
+    queue->size -= 1;
     return answerPCB;
 }
 

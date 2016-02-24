@@ -697,7 +697,7 @@ void run(CPU_p cpu) {
           //  priority_queue_to_string(cpu->readyQueue);
            // printf("\n%d\n",tempQueue->size );
             while (!isEmpty(tempQueue)) {
-                PCB_p pcb2 = tempQueue->head->pcb;
+//                PCB_p pcb2 = tempQueue->head->pcb;
                // toString(pcb2);
                enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
             }

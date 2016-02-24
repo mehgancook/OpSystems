@@ -18,6 +18,7 @@ extern "C" {
     
 typedef struct priority_queue {
         fifo_queue_p MainArray[NumberOfPriorities];
+        int size;
 } priority_queue;
 
 typedef priority_queue *priority_queue_p;
