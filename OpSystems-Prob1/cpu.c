@@ -353,8 +353,18 @@ int generatePriority() {
 }
 
 PCB_p generatePCB(CPU_p cpu) {
-    enqueue(cpu->newQueue, create_pcb(cpu->pidCounter++, generatePriority(), 0));
-    cpu->randomGeneratingPcbNumber += generateRandomNumber(3000) + cpu->computerTime;
+    int prio = generatePriority();
+    static int p = num_pcbs + 1;
+    PCB_p new = create_pcb(p++, prio, 0);
+    if (prio == 0) {
+       new->isCIP = 1; 
+    }
+    new->MAX_PC = (rand() %2001) + 2000;
+    new->TERMINATE = (rand() % 31);
+    initialize_IO_trap_array(new);  
+    enqueue(cpu->newQueue, new);
+   // printf("\nPCB created%d!\n");
+    cpu->randomGeneratingPcbNumber += (generateRandomNumber(1, 3000) + cpu->computerTime);
 }
 
 // Transfer the next PCB from the ready queue to currently running
@@ -643,7 +653,7 @@ void run(CPU_p cpu) {
     cpu->systack_pc = 0;
     cpu->cpu_pc = 0;
     cpu->fourth_context_switching = 1;
-    cpu->randomGeneratingPcbNumber = generateRandomNumber(3000);
+    cpu->randomGeneratingPcbNumber = generateRandomNumber(1,3000);
 
     // MT number of current quantums
     cpu->numberOfQuantums = 1;
