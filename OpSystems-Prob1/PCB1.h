@@ -44,11 +44,16 @@
      int priorityBoost;
      int origPriority;
      int isCIP; // Compute Intensive Processes
-
+     int isProdCon;
+     int isProducer;
+     int prodcon_num;
      char name[LENGTH_OF_NAME];
 
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
+     int MUTEX_1_TRAPS[4];
+     int MUTEX_2_TRAPS[4];
+     int mutex_lock[2];
      int reg_file[NUMREGS]; /* contents of GPRs */
  } PCB;
  
@@ -59,7 +64,6 @@
           enum state_type state; /* current state  of the pcb */
      int pid; /** id of the pid */
      address PC; /* where to resume */
- //    struct PCB *next_pcb; /* list ptr */
      int Priority; /* extrinsic property */
      address address_space; /* where in memory */
  
@@ -79,6 +83,8 @@
      
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
+     int MUTEX_1_TRAPS[4];
+     int MUTEX_2_TRAPS[4];
      int mutex_lock[2];
      
      int reg_file[NUMREGS]; /* contents of GPRs */
@@ -111,6 +117,8 @@
 
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
+     int MUTEX_1_TRAPS[4];
+     int MUTEX_2_TRAPS[4];
      int mutex_lock[2];
      int reg_file[NUMREGS]; /* contents of GPRs */
      
@@ -120,9 +128,10 @@
  
  PCB_p create_pcb(int thePid, int thePriority, int theCreationTime);
  
- PCB_p_producer create_producer(int thePid, int thePriority, int theCreationTime);
  
- PCB_p_consumer create_consumer(int thePid, int thePriority, int theCreationTime);
+ PCB_p create_producer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum);
+ 
+ PCB_p create_consumer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum);
  /**
   * Takes a PCB pointer and prints out the contents of the PCB
   * @param PCB_p pointer referencing the PCB to print
@@ -140,6 +149,10 @@
  address getPC(PCB_p pcb_p);
  
  int getPriority(PCB_p pcb_p);
+ 
+// void PCB_Action(PCB_p_producer thePCB, int *theData);
+// 
+int PCB_Action(PCB_p thePCB, int *theData);
  
  #ifdef __cplusplus
  }

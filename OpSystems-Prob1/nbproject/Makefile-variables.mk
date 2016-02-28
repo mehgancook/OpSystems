@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=Cygwin-Windows
 CND_ARTIFACT_DIR_Debug=dist/Debug/Cygwin-Windows
-CND_ARTIFACT_NAME_Debug=opsystems-prob1
-CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/opsystems-prob1
+CND_ARTIFACT_NAME_Debug=opsystems-probfinal
+CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/opsystems-probfinal
 CND_PACKAGE_DIR_Debug=dist/Debug/Cygwin-Windows/package
-CND_PACKAGE_NAME_Debug=opsystems-prob1.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/opsystems-prob1.tar
+CND_PACKAGE_NAME_Debug=opsystems-probfinal.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/opsystems-probfinal.tar
 # Release configuration
 CND_PLATFORM_Release=Cygwin-Windows
 CND_ARTIFACT_DIR_Release=dist/Release/Cygwin-Windows
-CND_ARTIFACT_NAME_Release=opsystems-prob1
-CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/opsystems-prob1
+CND_ARTIFACT_NAME_Release=opsystems-probfinal
+CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/opsystems-probfinal
 CND_PACKAGE_DIR_Release=dist/Release/Cygwin-Windows/package
-CND_PACKAGE_NAME_Release=opsystems-prob1.tar
-CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/opsystems-prob1.tar
+CND_PACKAGE_NAME_Release=opsystems-probfinal.tar
+CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/opsystems-probfinal.tar
 #
 # include compiler specific variables
 #

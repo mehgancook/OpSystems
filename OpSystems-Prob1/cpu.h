@@ -88,6 +88,8 @@
 #include "PCB1.h"
 #include "fifo_queue.h"
 #include "PriorityQueue.h"
+#include "Mutex.h"
+
 
 
 #ifndef CPU_H
@@ -123,6 +125,10 @@ typedef struct cpu {
     fifo_queue_p terminateQueue;
     fifo_queue_p ioWaitingQueue1;
     fifo_queue_p ioWaitingQueue2;
+    Mutex_p *dataMutexArray;
+    Mutex_p *signalMutexArray;
+    int *data;
+    int *signal;
 
     // MT
     priority_queue_p readyQueue;
@@ -146,6 +152,9 @@ void scheduler(CPU_p cpu, enum interrupt interruption);
 
 // Simulates an isr timer and calls the scheduler.
 void pseudo_isr_timer(CPU_p cpu);
+
+//initializes the trap arrays for one pcb
+void initialize_IO_trap_array(PCB_p pcb);
 
 /*
  * Runs the program

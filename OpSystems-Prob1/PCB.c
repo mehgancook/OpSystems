@@ -9,6 +9,7 @@
  *                      
  */
 #include <stdio.h> 
+#include <stdlib.h>
 #include "PCB1.h"
 #include <string.h>
 
@@ -26,8 +27,8 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     pcb_p->address_space = 0; /* where in memory */
     pcb_p->origPriority = thePriority;
     pcb_p->isCIP = 0;
+    pcb_p->isProdCon = 0;
     pcb_p->priorityBoost = 0;
-
     pcb_p->MAX_PC = 2345;
     pcb_p->CREATION = theCreationTime;
     pcb_p->TERMINATION = 0;
@@ -36,19 +37,21 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     return pcb_p;
 }
 
-PCB_p_consumer create_consumer(int thePid, int thePriority, int theCreationTime) {
-    PCB_p_consumer pcb_p_consumer = malloc(sizeof(PCB));
+PCB_p create_consumer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum) {
+    PCB_p pcb_p_consumer = malloc(sizeof(PCB));
     pcb_p_consumer->state = new; /* current state  of the pcb */
     pcb_p_consumer->pid = thePid; /** id of the pid */
     pcb_p_consumer->PC = 0; /* where to resume */
-    //struct PCB *next_pcb; /* list ptr */
     pcb_p_consumer->Priority = thePriority; /* extrinsic property */
     pcb_p_consumer->address_space = 0; /* where in memory */
     pcb_p_consumer->origPriority = thePriority;
     pcb_p_consumer->isCIP = 0;
     pcb_p_consumer->priorityBoost = 0;
-
-    pcb_p_consumer->MAX_PC = 2345;
+    strcpy(pcb_p_consumer->name, theName);
+    pcb_p_consumer->isProducer = 0;
+    pcb_p_consumer->isProdCon = 1;
+    pcb_p_consumer->prodcon_num = theProdConNum;
+    pcb_p_consumer->MAX_PC = 2000;
     pcb_p_consumer->CREATION = theCreationTime;
     pcb_p_consumer->TERMINATION = 0;
     pcb_p_consumer->TERMINATE = 0;
@@ -56,19 +59,21 @@ PCB_p_consumer create_consumer(int thePid, int thePriority, int theCreationTime)
     return pcb_p_consumer; 
 }
 
-PCB_p_producer create_producer(int thePid, int thePriority, int theCreationTime) {
-    PCB_p_producer pcb_p_producer = malloc(sizeof(PCB));
+PCB_p create_producer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum) {
+    PCB_p pcb_p_producer = malloc(sizeof(PCB));
     pcb_p_producer->state = new; /* current state  of the pcb */
     pcb_p_producer->pid = thePid; /** id of the pid */
     pcb_p_producer->PC = 0; /* where to resume */
-    //struct PCB *next_pcb; /* list ptr */
     pcb_p_producer->Priority = thePriority; /* extrinsic property */
     pcb_p_producer->address_space = 0; /* where in memory */
     pcb_p_producer->origPriority = thePriority;
     pcb_p_producer->isCIP = 0;
     pcb_p_producer->priorityBoost = 0;
-
-    pcb_p_producer->MAX_PC = 2345;
+    strcpy(pcb_p_producer->name, theName);
+    pcb_p_producer->isProducer = 1;
+    pcb_p_producer->isProdCon = 1;
+    pcb_p_producer->prodcon_num = theProdConNum;
+    pcb_p_producer->MAX_PC = 2000;
     pcb_p_producer->CREATION = theCreationTime;
     pcb_p_producer->TERMINATION = 0;
     pcb_p_producer->TERMINATE = 0;
@@ -138,4 +143,14 @@ void printToFile(FILE *outfile, PCB_p pcb_p) {
     fprintf(outfile, "Priority: %d  ", pcb_p->Priority);
     fprintf(outfile, "Address Space: %u\n\n", pcb_p->address_space);
 }
+
+ int PCB_Action(PCB_p thePCB, int *theData) {
+     int answer = -1;
+     if (thePCB->isProducer) {
+         theData++;
+     } else {
+         answer = *theData;
+     }
+     return answer;
+ }
     

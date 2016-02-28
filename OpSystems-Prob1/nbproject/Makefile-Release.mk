@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Mutex.o \
 	${OBJECTDIR}/PCB.o \
 	${OBJECTDIR}/PriorityQueue.o \
 	${OBJECTDIR}/PriorityQueue_test.o \
@@ -63,11 +64,16 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-probfinal.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-probfinal.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-probfinal ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/Mutex.o: Mutex.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Mutex.o Mutex.c
 
 ${OBJECTDIR}/PCB.o: PCB.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -115,7 +121,7 @@ ${OBJECTDIR}/print.o: print.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-prob1.exe
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/opsystems-probfinal.exe
 
 # Subprojects
 .clean-subprojects:

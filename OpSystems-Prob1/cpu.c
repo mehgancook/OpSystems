@@ -307,6 +307,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "PCB1.h"
 #include "fifo_queue.h"
 #include "PriorityQueue.h"
@@ -456,7 +457,6 @@ void initialize(CPU_p cpu) {
                 }
             }
         }
-
         // MT
         cpu->priorityCount[priority] += 1;
         PCB_p pcb = create_pcb(cpu->pidCounter++, priority, 0);
@@ -477,6 +477,105 @@ void initialize(CPU_p cpu) {
         initialize_IO_trap_array(pcb);
         enqueue(cpu->newQueue, pcb);
     }
+    
+    int runProducerConsumerPairs = 1;
+    
+    if (runProducerConsumerPairs) {
+        int num_prodcons_pairs = 10;
+//        int data[num_prodcons_pairs];
+//        int signal[num_prodcons_pairs];
+        int i;
+        for (i = 0; i < num_prodcons_pairs; i++) {
+            cpu->data[i] = 0;
+            cpu->signal[i] = 0;
+        }
+        //cpu->dataMutexArray = malloc(num_prodcons_pairs * sizeof(Mutex_p));
+        // Mutex_p signalMutexArray[num_prodcons_pairs];
+        //cpu->signalMutexArray  = malloc(num_prodcons_pairs * sizeof(Mutex_p));
+
+        int prodcon_num = 0;
+       // int total_pcbs = cpu->pidCounter + num_prodcons;
+        while (prodcon_num < num_prodcons_pairs) {
+            // MT
+            // Generate intial priority
+            int priority = generatePriority();
+            // If priority is 0
+            if (priority == 0) {
+                // Increment 0 count
+                zeroCount += 1;
+                // If we have more than 25 PCB's with 0 as a priority
+                if (zeroCount >= 25) {
+                    // generate a new priority that is not 0
+                    while (priority == 0) {
+                        priority = generatePriority();
+                    }
+                }
+            }
+
+            //create the Mutexs
+            char mutexData_string[20];
+            sprintf(mutexData_string, "MutexData%d", prodcon_num);
+            
+            Mutex_p dataMutex = create_Mutex(&(cpu->data[prodcon_num]), mutexData_string);
+            sprintf(mutexData_string, "MutexSig%d", prodcon_num);
+            Mutex_p signalMutex = create_Mutex(&(cpu->signal[prodcon_num]), mutexData_string);
+            cpu->dataMutexArray[prodcon_num] = dataMutex;
+            cpu->signalMutexArray[prodcon_num] = signalMutex;
+//            printf("building %d ", prodcon_num);
+//            printf("the data from cpu->dataArray %d", cpu->data[prodcon_num]);
+//            printf("the data from dataMutex %d", *dataMutex->theData);
+            //printf("the data from dataMutexArray %d", (cpu->dataMutexArray[prodcon_num]));
+            //printf("the data from dataMutexArray %d", *cpu->dataMutexArray[prodcon_num]->theData);
+//            printf("the data from dataMutex %d", *(dataMutex->theData));
+            //printf("the data from dataMutexArray %d\n", *(cpu->dataMutexArray[prodcon_num]));
+            // create producer
+            cpu->priorityCount[priority] += 1;
+            char prod_string[10];// = strcat("Prod", prodcon_num);
+            sprintf(prod_string, "Prod%d", prodcon_num);
+            PCB_p pcb_producer = create_producer(cpu->pidCounter++, priority, 0, prod_string, prodcon_num);
+            //printf("the pcb_producer prodcon_num %d ", pcb_producer->prodcon_num);
+            // MT
+            // If priority was set to 0
+            if (priority == 0) {
+                // Set isCIP to 1
+                pcb_producer->isCIP = 1;
+            }
+
+            fprintf(cpu->outfile, "Producer process created: PID %d at %d\n", pcb_producer->pid, cpu->computerTime);
+            // assign MAX_PC with a random number between 2000 - 4000
+            pcb_producer->MAX_PC = (rand() % 2001) + 2000;
+            // assign Terminate value with a random number between 0 - 30
+            pcb_producer->TERMINATE = (rand() % 31);
+
+            // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
+            initialize_IO_trap_array(pcb_producer);
+            enqueue(cpu->newQueue, pcb_producer);
+
+            // create consumer
+            cpu->priorityCount[priority] += 1;
+            char con_string[10];// = strcat("Cons", prodcon_num);
+            sprintf(con_string, "Cons%d", prodcon_num);
+            PCB_p pcb_consumer = create_consumer(cpu->pidCounter++, priority, 0, con_string, prodcon_num);
+            //printf("the pcb_consumer prodcon_num %d \n", pcb_consumer->prodcon_num);
+            prodcon_num++;
+            // MT
+            // If priority was set to 0
+            if (priority == 0) {
+                // Set isCIP to 1
+                pcb_consumer->isCIP = 1;
+            }
+
+            fprintf(cpu->outfile, "Consumer process created: PID %d at %d\n", pcb_consumer->pid, cpu->computerTime);
+            // assign MAX_PC with a random number between 2000 - 4000
+            pcb_consumer->MAX_PC = (rand() % 2001) + 2000;
+            // assign Terminate value with a random number between 0 - 30
+            pcb_consumer->TERMINATE = (rand() % 31);
+
+            // assign IO Trap Arrays 1 & 2 with initializeIOTrapArray();
+            initialize_IO_trap_array(pcb_consumer);
+            enqueue(cpu->newQueue, pcb_consumer);
+        }
+    }   
 }
 
 /*
@@ -630,17 +729,109 @@ void trapHandler(CPU_p cpu, int io) {
 
 void checkForTrapArrays(CPU_p cpu) {
     int i = 0;
-     if (!cpu->isRunning->isCIP) {
-    for (; i < 4; i++) {
-        if (cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
-            trapHandler(cpu, 1);
-            break;
-        } else if (cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC) {
-            trapHandler(cpu, 2);
-            break;
+    if (!cpu->isRunning->isCIP) {
+        for (; i < 4; i++) {
+            if (cpu->isRunning->IO_1_TRAPS[i] == cpu->isRunning->PC) {
+                trapHandler(cpu, 1);
+                break;
+            } else if (cpu->isRunning->IO_2_TRAPS[i] == cpu->isRunning->PC) {
+                trapHandler(cpu, 2);
+                break;
+            }
         }
     }
-      }
+}
+
+int threadConditionWait(PCB_p thePCB, CPU_p cpu, int threadCondition) {
+    int answer = 0;
+    
+    return answer;
+}
+
+
+//this is the basic producer consumer
+int processProdCon(PCB_p thePCB, CPU_p cpu) {
+    int switchedToNewPCB = 0;
+    //printf("processProdCon ");
+    //printf("pid: %d PC: %d ", thePCB->pid, thePCB->PC);
+    //printf(" the data %d ", *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+    if(thePCB->isProducer) {
+        //printf("isProducer %d ", thePCB->prodcon_num);
+        //try to get a lock on the signal
+        Mutex_p signalMutex = (cpu->signalMutexArray)[(thePCB->prodcon_num)];
+        if (tryLock(signalMutex, thePCB)) {
+            //printf("gotLock on signal %d ", *cpu->signalMutexArray[thePCB->prodcon_num]->theData);
+            //you have the lock on mutex signal check if it is 1 for write
+            if (*cpu->signalMutexArray[thePCB->prodcon_num]->theData == 1) {
+                //printf(" signal = 1 for producer ");
+                //if so get lock on dataMutex
+                if (tryLock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB)) {                    
+                    //once locked on data add one to the data and change signal bit
+                    //printf("before writting the data %d ", *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+                    (*cpu->dataMutexArray[thePCB->prodcon_num]->theData) += 1;
+                    //printf("wrote the data %d ", *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+                    printf("producer %d wrote the data it is now %d \n", thePCB->prodcon_num, *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+                    *cpu->signalMutexArray[thePCB->prodcon_num]->theData = 0;
+                    //printf("wrote the signal %d ", *cpu->signalMutexArray[thePCB->prodcon_num]->theData);
+                    //release data and signal mutex
+                    unLock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+                    unLock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+                } else {
+                    //you didn't get the lock so you are in the dataMutex waiting queue
+                    //but you also have a lock on the signalMutex
+                    ReadyQueueToIsRunning(cpu);
+                    switchedToNewPCB = 1;
+                }
+            } else {
+                //printf("signal = 0 for producer");
+                //if the signal is 0, release the mutex for signal
+                unLock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+            }
+        } else {
+            //you didn't get the lock so you are in the signalMutex waiting queue
+            ReadyQueueToIsRunning(cpu);
+            switchedToNewPCB = 1;
+        }
+    } else { //you are consumer
+        //printf("isConsumer %d ", thePCB->prodcon_num);
+        //try to get a lock on the signal
+        if (tryLock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB)) {
+            //printf("gotLock on signal ");
+            //you have the lock on mutex signal check if it is 0 for read
+            if (*cpu->signalMutexArray[thePCB->prodcon_num]->theData == 0) {
+                //printf("signal = 0 for consumer");
+                //if so get lock on dataMutex
+                if (tryLock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB)) {
+                    //once locked on data read the data and change signal bit
+                    int temp = *cpu->dataMutexArray[thePCB->prodcon_num]->theData;
+                    //
+                    //printf("read the data %d", temp);
+                    printf("consumer %d read the data it is currently %d \n", thePCB->prodcon_num, *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+                    
+                    *cpu->signalMutexArray[thePCB->prodcon_num]->theData = 1;
+                    //release data and signal mutex
+                    unLock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+                    unLock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+                } else {
+                    //you didn't get the lock so you are in the dataMutex waiting queue
+                    //but you also have a lock on the signalMutex
+                    ReadyQueueToIsRunning(cpu);
+                    switchedToNewPCB = 1;
+                }
+            } else {
+                //printf("signal = 1 for consumer");
+                //if the signal is 1, release the mutex for signal
+                unLock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB, cpu->readyQueue);
+            }
+        } else {
+            //you didn't get the lock so you are in the signalMutex waiting queue
+            ReadyQueueToIsRunning(cpu);
+            switchedToNewPCB = 1;
+        }
+    }
+    //printf(" the data %d ", *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
+    //printf("end processProdCon\n");
+    return switchedToNewPCB;
 }
 
 /*
@@ -661,6 +852,12 @@ void run(CPU_p cpu) {
     cpu->terminateQueue = create_queue();
     cpu->ioWaitingQueue1 = create_queue();
     cpu->ioWaitingQueue2 = create_queue();
+    cpu->dataMutexArray = (Mutex_p *) malloc(10 * sizeof(Mutex_p));
+    cpu->signalMutexArray =(Mutex_p *) malloc(10 * sizeof(Mutex_p));
+    cpu->data = malloc(10 * sizeof(int));
+    cpu->signal = malloc(10 * sizeof(int));
+//    cpu->dataMutexArray = (Mutex_p *) malloc(10 * sizeof(Mutex_p));
+//    cpu->signalMutexArray =(Mutex_p *) malloc(10 * sizeof(Mutex_p));
     cpu->ioTimerTime1 = ((rand() % 3) + 3) * timerInitTime;
     cpu->ioTimerTime2 = ((rand() % 3) + 3) * timerInitTime;
     cpu->initialioTimerTime1 = cpu->ioTimerTime1;
@@ -727,8 +924,7 @@ void run(CPU_p cpu) {
         
       //  cpu->numberOfQuantums++;
         cpu->computerTime++;
-       // printf("%d ",cpu->computerTime);
-        cpu->isRunning->PC++;
+       // printf("%d ",cpu->computerTime);      
 
         // TODO: priorityBoost occurs after so many quantums
         // TODO: For loop in queue after every # of quantums,
@@ -788,6 +984,14 @@ void run(CPU_p cpu) {
             iointerrupt1(cpu);
             iointerrupt2(cpu);
             checkForTrapArrays(cpu);
+        }
+        int switched = 0;
+        if (cpu->isRunning->isProdCon) {
+            switched = processProdCon(cpu->isRunning, cpu);
+        } 
+        
+        if (!switched) {
+            cpu->isRunning->PC++;
         }
 //                if (cpu->numberOfQuantums % starvationTimer == 0) {
 ////

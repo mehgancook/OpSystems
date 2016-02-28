@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Mutex.h</itemPath>
       <itemPath>PCB1.h</itemPath>
       <itemPath>PriorityQueue.h</itemPath>
       <itemPath>PriorityQueue_test.h</itemPath>
@@ -20,6 +21,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Mutex.c</itemPath>
       <itemPath>PCB.c</itemPath>
       <itemPath>PriorityQueue.c</itemPath>
       <itemPath>PriorityQueue_test.c</itemPath>
@@ -41,6 +43,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -51,6 +56,10 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="Mutex.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PCB.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="PCB1.h" ex="false" tool="3" flavor2="0">
@@ -104,6 +113,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Mutex.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PCB.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="PCB1.h" ex="false" tool="3" flavor2="0">
