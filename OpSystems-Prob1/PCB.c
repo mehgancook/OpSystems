@@ -34,6 +34,7 @@ PCB_p create_pcb(int thePid, int thePriority, int theCreationTime) {
     pcb_p->TERMINATION = 0;
     pcb_p->TERMINATE = 0;
     pcb_p->TERM_COUNT = 0;
+    pcb_p->pcb_type = normal;
     return pcb_p;
 }
 
@@ -50,6 +51,7 @@ PCB_p create_consumer(int thePid, int thePriority, int theCreationTime, char *th
     strcpy(pcb_p_consumer->name, theName);
     pcb_p_consumer->isProducer = 0;
     pcb_p_consumer->isProdCon = 1;
+    pcb_p_consumer->pcb_type = prodcon;
     pcb_p_consumer->prodcon_num = theProdConNum;
     pcb_p_consumer->MAX_PC = 2000;
     pcb_p_consumer->CREATION = theCreationTime;
@@ -58,6 +60,28 @@ PCB_p create_consumer(int thePid, int thePriority, int theCreationTime, char *th
     pcb_p_consumer->TERM_COUNT = 0;
     return pcb_p_consumer; 
 }
+
+PCB_p create_MRU(int thePid, int thePriority, int theCreationTime, char *theName, int theMRUNum) {
+    PCB_p pcb = malloc(sizeof(PCB));
+    pcb->state = new; /* current state  of the pcb */
+    pcb->pid = thePid; /** id of the pid */
+    pcb->PC = 0; /* where to resume */
+    pcb->Priority = thePriority; /* extrinsic property */
+    pcb->address_space = 0; /* where in memory */
+    pcb->origPriority = thePriority;
+    pcb->isCIP = 0;
+    pcb->priorityBoost = 0;
+    strcpy(pcb->name, theName);
+    pcb->isProdCon = 0;
+    pcb->pcb_type = nondeadlock;
+    pcb->MRU_num = theMRUNum;
+    pcb->MAX_PC = 2000;
+    pcb->CREATION = theCreationTime;
+    pcb->TERMINATION = 0;
+    pcb->TERMINATE = 0;
+    pcb->TERM_COUNT = 0;
+    return pcb; 
+};
 
 PCB_p create_producer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum) {
     PCB_p pcb_p_producer = malloc(sizeof(PCB));
@@ -72,6 +96,7 @@ PCB_p create_producer(int thePid, int thePriority, int theCreationTime, char *th
     strcpy(pcb_p_producer->name, theName);
     pcb_p_producer->isProducer = 1;
     pcb_p_producer->isProdCon = 1;
+    pcb_p_producer->pcb_type = prodcon;
     pcb_p_producer->prodcon_num = theProdConNum;
     pcb_p_producer->MAX_PC = 2000;
     pcb_p_producer->CREATION = theCreationTime;

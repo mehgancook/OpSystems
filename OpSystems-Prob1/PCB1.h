@@ -1,4 +1,4 @@
-/*
+ /*
  - * PCB.h
  - *
  - *  Created on: Jan 7, 2016
@@ -21,6 +21,10 @@
  #define LENGTH_OF_NAME 20
  
  enum state_type {new, ready, running, waiting, interrupted, halted};
+ 
+ typedef enum {ready_to_read, ready_to_write} condition_type ;
+ 
+ enum pcb_type_enum {normal, prodcon, nondeadlock, deadlock};
  
  typedef unsigned int address;
  
@@ -45,14 +49,17 @@
      int origPriority;
      int isCIP; // Compute Intensive Processes
      int isProdCon;
+     enum pcb_type_enum pcb_type;
      int isProducer;
      int prodcon_num;
+     int MRU_num;
+     int isMRUA;
      char name[LENGTH_OF_NAME];
 
      int IO_1_TRAPS[4];
      int IO_2_TRAPS[4];
-     int MUTEX_1_TRAPS[4];
-     int MUTEX_2_TRAPS[4];
+     int MUTEX_1_TRAPS[2];
+     int MUTEX_2_TRAPS[2];
      int mutex_lock[2];
      int reg_file[NUMREGS]; /* contents of GPRs */
  } PCB;
@@ -128,10 +135,11 @@
  
  PCB_p create_pcb(int thePid, int thePriority, int theCreationTime);
  
- 
  PCB_p create_producer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum);
  
  PCB_p create_consumer(int thePid, int thePriority, int theCreationTime, char *theName, int theProdConNum);
+ 
+ PCB_p create_MRU(int thePid, int thePriority, int theCreationTime, char *theName, int theMRUNum);
  /**
   * Takes a PCB pointer and prints out the contents of the PCB
   * @param PCB_p pointer referencing the PCB to print
