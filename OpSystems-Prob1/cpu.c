@@ -835,6 +835,8 @@ void run(CPU_p cpu) {
         // MT
         if (cpu->numberOfQuantums % starvationTimer == 0) {
 //
+            printf("Boosting for Starvation\n");
+
             fifo_queue_p tempQueue = create_queue();
            // printf("QUEUE BEFORE ADJUSTING PRIORITY LEVEL DUE TO STARVATION\n");
            // priority_queue_to_string(cpu->readyQueue);
