@@ -456,7 +456,7 @@ void dispatcher(CPU_p cpu) {
     }
    // printf("%d ", cpu->readyQueue->size);
     cpu->isRunning = temp2;
-    cpu->isRunning->priorityBoost = 1;
+    // cpu->isRunning->priorityBoost = 1;
  //   toString(cpu->isRunning);
     cpu->systack_pc = cpu->isRunning->PC;
     cpu->isRunning->state = running;
@@ -464,11 +464,11 @@ void dispatcher(CPU_p cpu) {
     // MT Resets priorityBoost and origPriority to defaults
     // In SWAP in the isRunning, change out the origPriority and the
     // priorityBoost flag
-   // cpu->isRunning->priorityBoost = 0;
-//    if (cpu->isRunning->origPriority >= 0) {
-//        cpu->isRunning->Priority = cpu->isRunning->origPriority;
-//    }
-//    cpu->isRunning->origPriority = -1;
+   cpu->isRunning->priorityBoost = 0;
+   if (cpu->isRunning->origPriority >= 0) {
+       cpu->isRunning->Priority = cpu->isRunning->origPriority;
+   }
+   cpu->isRunning->origPriority = -1;
 
     temp->state = ready;
     cpu->fourth_context_switching++;
@@ -806,25 +806,20 @@ void run(CPU_p cpu) {
       //  printf("%d ", ijk);
         if (cpu->computerTime % quantum == 0) {
             cpu->numberOfQuantums++;
-            fifo_queue_p tempQueue = create_queue();
-         //   priority_queue_to_string(cpu->readyQueue);
-            while(!isEmptyPriorityQueue(cpu->readyQueue)) {
-                PCB_p pcb = dequeue_priority(cpu->readyQueue);
-              //  toString(pcb);
-                if (pcb->Priority != pcb->origPriority) {
-                    pcb->Priority = pcb->origPriority;        
-                }
-                enqueue(tempQueue, pcb);
-            }
-          //  priority_queue_to_string(cpu->readyQueue);
-           // printf("\n%d\n",tempQueue->size );
-            while (!isEmpty(tempQueue)) {
-//                PCB_p pcb2 = tempQueue->head->pcb;
-               // toString(pcb2);
-               enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
-            }
-        //    printf("\nQUEUE AFTER 1 QUANTA\n");
-        //    priority_queue_to_string(cpu->readyQueue);
+
+            // Changed T.ZULLO             
+            // fifo_queue_p tempQueue = create_queue();
+            // while(!isEmptyPriorityQueue(cpu->readyQueue)) {
+            //     PCB_p pcb = dequeue_priority(cpu->readyQueue);
+            //   //  toString(pcb);
+            //     if (pcb->Priority != pcb->origPriority) {
+            //         pcb->Priority = pcb->origPriority;        
+            //     }
+            //     enqueue(tempQueue, pcb);
+            // }
+            // while (!isEmpty(tempQueue)) {
+            //    enqueue_priority(cpu->readyQueue, dequeue(tempQueue));
+            // }
         }
         
       //  cpu->numberOfQuantums++;
@@ -849,7 +844,7 @@ void run(CPU_p cpu) {
                 if (!pcb->priorityBoost) {
                     pcb->origPriority = pcb->Priority;
                     if (pcb->Priority != 0)
-                    pcb->Priority = pcb->Priority - 1;        
+                        pcb->Priority = pcb->Priority - 1;        
                 }
                 pcb->priorityBoost = 0;
                 enqueue(tempQueue, pcb);
