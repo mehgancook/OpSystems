@@ -878,6 +878,10 @@ void run(CPU_p cpu) {
                 cpu->currentTimerTime = timerInitTime;
             }
         }
+        // Check for deadlock every 100 quantums
+        if (cpu->numberOfQuantums % 100 == 0) {
+            dead_lock_detect(cpu->R1MutexArray, cpu->R2MutexArray, cpu->num_MRUs, cpu);
+        }
         // Check for timer interrupt
         if (timerInterrupt(cpu)) {
             pseudo_isr_timer(cpu);
@@ -926,6 +930,7 @@ void run(CPU_p cpu) {
 //            cpu->numberOfQuantums = 1;
 //        }
     }
+    printf("terminated successfully");
     fclose(cpu->outfile);
 }
 
