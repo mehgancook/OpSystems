@@ -731,6 +731,22 @@ int processProdCon(PCB_p thePCB, CPU_p cpu) {
     //printf("end processProdCon\n");
     return switchedToNewPCB;
 }
+void dead_lock_detect(Mutex_p *R1MutexArray, Mutex_p *R2MutexArray, CPU_p cpu) {
+    int flag = 1;
+    int i;
+    for (i = 0; i < cpu->num_MRUs; i++) {
+        if (R1MutexArray[i]->locked && R2MutexArray[i]->locked && (R1MutexArray[i]->owner != R2MutexArray[i]->owner)) {
+            fprintf(cpu->outfile, "Deadlock detected for processes PID%d and PID%d\n", R1MutexArray[i]->owner, R2MutexArray[i]->owner);
+            R1MutexArray[i]->locked = 0;
+            unLock(R1MutexArray[i], R1MutexArray[i]->owner, cpu->readyQueue);
+            flag = 0;
+        }
+    }
+    if (flag) {
+        fprintf(cpu->outfile, "No deadlock detected");
+    }
+}
+
 
 /*
  * Runs the program and simulates the CPU 
@@ -880,7 +896,7 @@ void run(CPU_p cpu) {
         }
         // Check for deadlock every 100 quantums
         if (cpu->numberOfQuantums % 100 == 0) {
-            dead_lock_detect(cpu->R1MutexArray, cpu->R2MutexArray, cpu->num_MRUs, cpu);
+            dead_lock_detect(cpu->R1MutexArray, cpu->R2MutexArray, cpu);
         }
         // Check for timer interrupt
         if (timerInterrupt(cpu)) {
