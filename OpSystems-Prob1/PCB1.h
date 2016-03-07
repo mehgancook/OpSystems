@@ -21,12 +21,8 @@
  #define LENGTH_OF_NAME 20
  
  enum state_type {new, ready, running, waiting, interrupted, halted};
- 
-<<<<<<< HEAD
+
  typedef enum {ready_to_read, ready_to_write, enum_counter} condition_type ;
-=======
- typedef enum {ready_to_read, ready_to_write} condition_type ;
->>>>>>> master
  
  enum pcb_type_enum {normal, prodcon, nondeadlock, deadlock};
  
