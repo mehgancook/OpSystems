@@ -27,17 +27,23 @@ PCB_p get_Owner(Mutex_p theMutex){
     return theMutex->owner;    
 }
 
-int tryLock(Mutex_p theMutex, PCB_p theLocker){
+int Lock(Mutex_p theMutex, PCB_p theLocker, FILE *theFile){
     int answer = 0; //0 is didn't get lock
+    char string[80];
+    //printf("\n theFile %p\n",theFile);
     if (theMutex->owner == NULL) {
         theMutex->owner = theLocker;
         answer = 1;
-        //enqueue(theReadyQueue, theLocker);
+        sprintf(string, "PID %d: requested lock on mutex %s - succeeded\n", theLocker->pid, theMutex->name);
+        fprintf(theFile, string);
     } else if (theMutex->owner == theLocker) {
         answer = 1;
     } else {
         enqueue(theMutex->waitingQueue, theLocker);
+        sprintf(string, "PID %d: requested lock on mutex %s - blocked by PID %d\n", theLocker->pid, theMutex->name, theMutex->owner->pid);
+        fprintf(theFile, string);
     }
+
     return answer;
 }
 

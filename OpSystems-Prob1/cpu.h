@@ -125,11 +125,20 @@ typedef struct cpu {
     fifo_queue_p terminateQueue;
     fifo_queue_p ioWaitingQueue1;
     fifo_queue_p ioWaitingQueue2;
+    
+    int num_prodcons;
     Mutex_p *dataMutexArray;
     Mutex_p *signalMutexArray;
+    fifo_queue_p **threadConditionArray;
     int *data;
     int *signal;
-
+    
+    int num_MRUs;
+    Mutex_p *R1MutexArray;
+    Mutex_p *R2MutexArray;
+    int *R1;
+    int *R2;
+    
     // MT
     priority_queue_p readyQueue;
     int priorityCount[NumberOfPriorities];
