@@ -48,6 +48,7 @@ int tryLock(Mutex_p theMutex, PCB_p theLocker);
 
 void unLock(Mutex_p theMutex, PCB_p theLocker, priority_queue_p theReadyQueue);
 
+int dead_lock_detect(Mutex_p *R1_array, Mutex_p *R2_array, CPU_p cpu);
 
 #ifdef __cplusplus
 }

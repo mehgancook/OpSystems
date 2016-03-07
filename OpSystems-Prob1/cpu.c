@@ -102,16 +102,28 @@ void dequeueReadyQueue(CPU_p cpu) {
 
 //must be done before initialize_IO_trap_array
 void initialize_Mutex_trap_array(PCB_p pcb) {
+<<<<<<< HEAD
     int max = pcb->MAX_PC;
     int breakpoint = ceil(max/10);
     switch (pcb->pcb_type) {
         case prodcon:
             pcb->MUTEX_1_TRAPS[0] = breakpoint;  //lock mutex1
             pcb->MUTEX_1_TRAPS[1] = breakpoint + 5;  //unlock mutex1
+=======
+//        int M1[2] = {0};
+//        int M2[2] = {0};
+    int max = pcb->MAX_PC;
+    int midpoint = max/2;
+    switch (pcb->pcb_type) {
+        case prodcon:
+            pcb->MUTEX_1_TRAPS[0] = pcb->MAX_PC/2;  //lock mutex1
+            pcb->MUTEX_1_TRAPS[1] = pcb->MAX_PC/2 + 1;  //unlock mutex1
+>>>>>>> master
             break;
         case normal:
             break;
         case nondeadlock:
+<<<<<<< HEAD
             pcb->MUTEX_1_TRAPS[0] = breakpoint;  //lock mutex1
             pcb->MUTEX_2_TRAPS[0] = breakpoint + 5;  //lock mutex2      
             pcb->MUTEX_2_TRAPS[1] = breakpoint + 10;  //unlock mutex2
@@ -128,6 +140,24 @@ void initialize_Mutex_trap_array(PCB_p pcb) {
                 pcb->MUTEX_1_TRAPS[0] = breakpoint + 5;  //lock mutex1      
                 pcb->MUTEX_1_TRAPS[1] = breakpoint + 10;  //unlock mutex1
                 pcb->MUTEX_2_TRAPS[1] = breakpoint + 15;  //unlock mutex2
+=======
+            pcb->MUTEX_1_TRAPS[0] = midpoint;  //lock mutex1
+            pcb->MUTEX_2_TRAPS[0] = midpoint + 5;  //lock mutex2      
+            pcb->MUTEX_2_TRAPS[1] = midpoint + 10;  //unlock mutex2
+            pcb->MUTEX_1_TRAPS[1] = midpoint + 15;  //unlock mutex1
+            break;
+        case deadlock:
+            if (pcb->isMRUA) {
+                pcb->MUTEX_1_TRAPS[0] = midpoint;  //lock mutex1
+                pcb->MUTEX_2_TRAPS[0] = midpoint + 5;  //lock mutex2      
+                pcb->MUTEX_2_TRAPS[1] = midpoint + 10;  //unlock mutex2
+                pcb->MUTEX_1_TRAPS[1] = midpoint + 15;  //unlock mutex1
+            } else {
+                pcb->MUTEX_2_TRAPS[0] = midpoint;  //lock mutex2
+                pcb->MUTEX_1_TRAPS[0] = midpoint + 5;  //lock mutex1      
+                pcb->MUTEX_1_TRAPS[1] = midpoint + 10;  //unlock mutex1
+                pcb->MUTEX_2_TRAPS[1] = midpoint + 15;  //unlock mutex2
+>>>>>>> master
             }
 
             break;
@@ -579,6 +609,7 @@ void trapHandler(CPU_p cpu, int trap) {
 int mutexTrapHandler(CPU_p cpu, int trap) {
     int switched = 0;
     int gotLock = 1;
+<<<<<<< HEAD
     //printf("cpu->outfile %p\n", (cpu->outfile));
     if (trap == 1) {
         fprintf(cpu->outfile, "Mutex trap request: Lock R1.\n");
@@ -591,6 +622,18 @@ int mutexTrapHandler(CPU_p cpu, int trap) {
         gotLock = Lock(cpu->R2MutexArray[cpu->isRunning->MRU_num], cpu->isRunning, cpu->outfile);
     } else if (trap == 4) {
         fprintf(cpu->outfile, "Mutex trap request: UnLock R2.\n");
+=======
+    if (trap == 1) {
+        gotLock = Lock(cpu->R1MutexArray[cpu->isRunning->MRU_num], cpu->isRunning, cpu->outfile);
+    } else if (trap == 2) {
+        //fprintf(cpu->outfile, "Mutex trap request: UnLock R1,");
+        unLock(cpu->R1MutexArray[cpu->isRunning->MRU_num], cpu->isRunning, cpu->readyQueue);
+    } else if (trap == 3) {
+        //fprintf(cpu->outfile, "Mutex trap request: Lock R2,");
+        gotLock = Lock(cpu->R2MutexArray[cpu->isRunning->MRU_num], cpu->isRunning, cpu->outfile);
+    } else if (trap == 4) {
+        //fprintf(cpu->outfile, "Mutex trap request: UnLock R2,");
+>>>>>>> master
         unLock(cpu->R2MutexArray[cpu->isRunning->MRU_num], cpu->isRunning, cpu->readyQueue);
     } 
  
@@ -621,8 +664,11 @@ void checkForTrapArrays(CPU_p cpu) {
 int checkForMRUMutexArrays(CPU_p cpu) {
     int switched = 0;
     int i = 0;
+<<<<<<< HEAD
     int PC = cpu->isRunning->PC;
     
+=======
+>>>>>>> master
     if (cpu->isRunning->MUTEX_1_TRAPS[0] == cpu->isRunning->PC) {
         switched = mutexTrapHandler(cpu, 1);
     } else if (cpu->isRunning->MUTEX_1_TRAPS[1] == cpu->isRunning->PC) {
@@ -636,6 +682,20 @@ int checkForMRUMutexArrays(CPU_p cpu) {
 }
 
 int checkForProdConMutexArrays(CPU_p cpu) {
+<<<<<<< HEAD
+=======
+    
+}
+
+int threadConditionWait(PCB_p thePCB, CPU_p cpu, condition_type theCondition, Mutex_p theMutex) {
+    int answer = 0;
+    
+    return answer;
+}
+
+int threadConditionSignal(CPU_p cpu, condition_type theCondition) {
+    int answer = 0;
+>>>>>>> master
     
 }
 
@@ -663,13 +723,21 @@ int processProdConOld(PCB_p thePCB, CPU_p cpu) {
         //printf("isProducer %d ", thePCB->prodcon_num);
         //try to get a lock on the signal
         Mutex_p signalMutex = (cpu->signalMutexArray)[(thePCB->prodcon_num)];
+<<<<<<< HEAD
         if (Lock(signalMutex, thePCB, cpu->outfile)) {
+=======
+        if (Lock(signalMutex, thePCB)) {
+>>>>>>> master
             //printf("gotLock on signal %d ", *cpu->signalMutexArray[thePCB->prodcon_num]->theData);
             //you have the lock on mutex signal check if it is 1 for write
             if (*cpu->signalMutexArray[thePCB->prodcon_num]->theData == 1) {
                 //printf(" signal = 1 for producer ");
                 //if so get lock on dataMutex
+<<<<<<< HEAD
                 if (Lock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB, cpu->outfile)) {                    
+=======
+                if (Lock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB)) {                    
+>>>>>>> master
                     //once locked on data add one to the data and change signal bit
                     printf("before writting the data %d ", *cpu->dataMutexArray[thePCB->prodcon_num]->theData);
                     (*cpu->dataMutexArray[thePCB->prodcon_num]->theData) += 1;
@@ -699,13 +767,21 @@ int processProdConOld(PCB_p thePCB, CPU_p cpu) {
     } else { //you are consumer
         //printf("isConsumer %d ", thePCB->prodcon_num);
         //try to get a lock on the signal
+<<<<<<< HEAD
         if (Lock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB, cpu->outfile)) {
+=======
+        if (Lock(cpu->signalMutexArray[thePCB->prodcon_num], thePCB)) {
+>>>>>>> master
             //printf("gotLock on signal ");
             //you have the lock on mutex signal check if it is 0 for read
             if (*cpu->signalMutexArray[thePCB->prodcon_num]->theData == 0) {
                 //printf("signal = 0 for consumer");
                 //if so get lock on dataMutex
+<<<<<<< HEAD
                 if (Lock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB, cpu->outfile)) {
+=======
+                if (Lock(cpu->dataMutexArray[thePCB->prodcon_num], thePCB)) {
+>>>>>>> master
                     //once locked on data read the data and change signal bit
                     int temp = *cpu->dataMutexArray[thePCB->prodcon_num]->theData;
                     //
@@ -738,6 +814,22 @@ int processProdConOld(PCB_p thePCB, CPU_p cpu) {
     //printf("end processProdCon\n");
     return switchedToNewPCB;
 }
+void dead_lock_detect(Mutex_p *R1MutexArray, Mutex_p *R2MutexArray, CPU_p cpu) {
+    int flag = 1;
+    int i;
+    for (i = 0; i < cpu->num_MRUs; i++) {
+        if (R1MutexArray[i]->locked && R2MutexArray[i]->locked && (R1MutexArray[i]->owner != R2MutexArray[i]->owner)) {
+            fprintf(cpu->outfile, "Deadlock detected for processes PID%d and PID%d\n", R1MutexArray[i]->owner, R2MutexArray[i]->owner);
+            R1MutexArray[i]->locked = 0;
+            unLock(R1MutexArray[i], R1MutexArray[i]->owner, cpu->readyQueue);
+            flag = 0;
+        }
+    }
+    if (flag) {
+        fprintf(cpu->outfile, "No deadlock detected");
+    }
+}
+
 
 //this is the basic producer consumer
 int processProdCon(PCB_p thePCB, CPU_p cpu) {
@@ -855,6 +947,7 @@ void run(CPU_p cpu) {
     cpu->data = malloc(cpu->num_prodcons * sizeof(int));
     cpu->signal = malloc(cpu->num_prodcons * sizeof(int));
     
+<<<<<<< HEAD
     cpu->threadConditionArray = malloc(cpu->num_prodcons * sizeof(fifo_queue_p *));
     int i;
     int j;
@@ -866,6 +959,8 @@ void run(CPU_p cpu) {
     }
 
     
+=======
+>>>>>>> master
     cpu->num_MRUs = 10;
     cpu->R1MutexArray = (Mutex_p *) malloc(cpu->num_MRUs * sizeof(Mutex_p));
     cpu->R2MutexArray =(Mutex_p *) malloc(cpu->num_MRUs * sizeof(Mutex_p));
@@ -906,7 +1001,10 @@ void run(CPU_p cpu) {
     int ijk = 0;
     //1504 run time is the last time this works.
     while (cpu->computerTime < max_sys_timer) {
+<<<<<<< HEAD
         //printf("%d\n", cpu->computerTime);
+=======
+>>>>>>> master
         //     me++;
         ijk++;
 
@@ -988,6 +1086,10 @@ void run(CPU_p cpu) {
                 cpu->currentTimerTime = timerInitTime;
             }
         }
+        // Check for deadlock every 100 quantums
+        if (cpu->numberOfQuantums % 100 == 0) {
+            dead_lock_detect(cpu->R1MutexArray, cpu->R2MutexArray, cpu);
+        }
         // Check for timer interrupt
         if (timerInterrupt(cpu)) {
             pseudo_isr_timer(cpu);
@@ -1004,7 +1106,10 @@ void run(CPU_p cpu) {
         } 
         
         if (!switched && (cpu->isRunning->pcb_type == deadlock || cpu->isRunning->pcb_type == nondeadlock)) {
+<<<<<<< HEAD
             //printf("entered checkForMRUMutexArrays");
+=======
+>>>>>>> master
             switched = checkForMRUMutexArrays(cpu);
         }
         
@@ -1038,8 +1143,12 @@ void run(CPU_p cpu) {
 //            cpu->numberOfQuantums = 1;
 //        }
     }
+<<<<<<< HEAD
     printf("\nreached max pc.\n");
     fprintf(cpu->outfile, "reached max pc.\n");
+=======
+    printf("terminated successfully");
+>>>>>>> master
     fclose(cpu->outfile);
 }
 

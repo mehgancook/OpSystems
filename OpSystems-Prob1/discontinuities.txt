@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 GROUP 9:
 Tony Zullo
 Jonah Howard
@@ -4605,3 +4606,5 @@ I/O trap request: I/O device 1,PID 45 put into waiting queue, PID 24 dispatched
 I/O trap request: I/O device 2,PID 24 put into waiting queue, PID 46 dispatched
 Timer interrupt: PID 46 was running, PID 47 dispatched
 reached max pc.
+=======
+>>>>>>> master
