@@ -53,12 +53,15 @@ int Lock(Mutex_p theMutex, PCB_p theLocker, FILE *theFile){
         answer = 1;
         sprintf(string, "PID %d: requested lock on mutex %s - succeeded\n", theLocker->pid, theMutex->name);
         fprintf(theFile, string);
+        printf("%s", string);
+        theMutex->locked = 1;
     } else if (theMutex->owner == theLocker) {
         answer = 1;
     } else {
         enqueue(theMutex->waitingQueue, theLocker);
         sprintf(string, "PID %d: requested lock on mutex %s - blocked by PID %d\n", theLocker->pid, theMutex->name, theMutex->owner->pid);
         fprintf(theFile, string);
+        printf("%s", string);
     }
 
     return answer;
@@ -68,6 +71,7 @@ void unLock(Mutex_p theMutex, PCB_p theLocker, priority_queue_p theReadyQueue){
     if (theMutex->owner = theLocker) {
         if (isEmpty(theMutex->waitingQueue)) {
             theMutex->owner = NULL;
+            theMutex->locked = 0;
         } else {
             theMutex->owner = dequeue(theMutex->waitingQueue); 
             enqueue_priority(theReadyQueue, theMutex->owner);

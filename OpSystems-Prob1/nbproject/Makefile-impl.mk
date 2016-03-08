@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=OpSystems-Prob1
+PROJECTNAME=OpSystems-ProbFinal
 
 # Active Configuration
 DEFAULTCONF=Debug
